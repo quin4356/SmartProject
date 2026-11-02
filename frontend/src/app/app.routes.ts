@@ -3,6 +3,7 @@ import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { authGuard, guestGuard } from './core/auth-guard';
 import { LibraryList } from './pages/library-list/library-list';
+import { ItemForm } from './pages/item-form/item-form';
 
 export const routes: Routes = [
   { path: 'login', component: Login, canActivate: [guestGuard] },
@@ -16,6 +17,18 @@ export const routes: Routes = [
   {
     path: 'library/documentaries',
     component: LibraryList,
+    data: { type: 'DOCUMENTARY' },
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/books/new',
+    component: ItemForm,
+    data: { type: 'BOOK' },
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/documentaries/new',
+    component: ItemForm,
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
