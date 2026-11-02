@@ -1,0 +1,23 @@
+<main class="library">
+  <h1>{{ title() }}</h1>
+
+  @if (items.isLoading()) {
+    <mat-spinner diameter="32" />
+  } @else if (items.error()) {
+    <p>Laden is mislukt. Probeer het opnieuw.</p>
+  } @else if (items.value()?.length === 0) {
+    <p>Nog niets toegevoegd.</p>
+  } @else {
+    <div class="grid">
+      @for (item of items.value(); track item.id) {
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ item.title }}</mat-card-title>
+            <mat-card-subtitle>{{ item.creator_name }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>{{ statusLabel(item.type, item.status) }}</mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</main>
