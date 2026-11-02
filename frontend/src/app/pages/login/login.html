@@ -1,0 +1,19 @@
+<main class="login">
+  <mat-card class="login__card">
+    <mat-card-header>
+      <mat-card-title>SmartProject</mat-card-title>
+      <mat-card-subtitle>Je persoonlijke kennisbibliotheek</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Meld je aan om je boeken en documentaires te beheren.</p>
+      @if (errorMessage()) {
+        <p class="login__error">{{ errorMessage() }}</p>
+      }
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button type="button" (click)="signInWithGoogle()">
+        Aanmelden met Google
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</main>
