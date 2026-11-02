@@ -1,5 +1,8 @@
 <main class="library">
-  <h1>{{ title() }}</h1>
+  <header class="header">
+    <h1>{{ title() }}</h1>
+    <a mat-flat-button [routerLink]="addRoute()">Toevoegen</a>
+  </header>
 
   @if (items.isLoading()) {
     <mat-spinner diameter="32" />
