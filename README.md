@@ -1,2 +1,0 @@
-# SmartProject
-Personal Knowledge Library
