@@ -6,16 +6,20 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { catchError, debounceTime, distinctUntilChanged, from, map, of, switchMap } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatOptionSelectionChange, provideNativeDateAdapter } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ItemStatus, ItemType, NewLibraryItem, STATUS_LABELS } from '../../core/models';
 import { LibraryItems } from '../../core/library-items';
+import { BookSearch, BookSuggestion } from '../../core/book-search';
 
 const MAX_TEXT_LENGTH = 255;
 const MAX_DESCRIPTION_LENGTH = 5000;
@@ -43,6 +47,7 @@ function toIsoDate(date: Date | null): string | null {
   selector: 'app-item-form',
   imports: [
     ReactiveFormsModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -58,6 +63,7 @@ export class ItemForm {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly libraryItems = inject(LibraryItems);
+  private readonly bookSearch = inject(BookSearch);
 
   readonly type = input.required<ItemType>();
 
@@ -92,6 +98,20 @@ export class ItemForm {
     { validators: endDateAfterStartDate },
   );
 
+  protected readonly suggestions = toSignal(
+    this.form.controls.title.valueChanges.pipe(
+      debounceTime(300),
+      map((value) => value.trim()),
+      distinctUntilChanged(),
+      switchMap((query) =>
+        this.isBook() && query.length >= 2
+          ? from(this.bookSearch.search(query)).pipe(catchError(() => of([] as BookSuggestion[])))
+          : of([] as BookSuggestion[]),
+      ),
+    ),
+    { initialValue: [] as BookSuggestion[] },
+  );
+
   async submit(): Promise<void> {
     this.errorMessage.set(null);
     if (this.form.invalid) {
@@ -124,5 +144,15 @@ export class ItemForm {
 
   cancel(): void {
     void this.router.navigateByUrl(this.listRoute());
+  }
+
+  protected selectBook(book: BookSuggestion, event: MatOptionSelectionChange): void {
+    if (!event.isUserInput) {
+      return;
+    }
+    this.form.patchValue({
+      creatorName: book.authors.join(', ').slice(0, MAX_TEXT_LENGTH),
+      description: book.description.replace(/<[^>]*>/g, '').slice(0, MAX_DESCRIPTION_LENGTH),
+    });
   }
 }
