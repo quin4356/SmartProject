@@ -2,10 +2,11 @@ import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { Auth } from '../../core/auth';
+import { LibraryList } from '../library-list/library-list';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, LibraryList],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
