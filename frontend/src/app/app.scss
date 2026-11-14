@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  max-width: 960px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: auto auto 0;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font-family: var(--mat-sys-label-small-font);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
