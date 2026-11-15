@@ -20,6 +20,7 @@ export interface LibraryItem {
   country: string | null;
   external_source: 'GOOGLE_BOOKS' | 'TMDB' | null;
   external_id: string | null;
+  category: string | null;
   rating: number | null;
   start_date: string | null;
   end_date: string | null;
@@ -34,3 +35,8 @@ export const STATUS_LABELS: Record<ItemType, Record<ItemStatus, string>> = {
   BOOK: { TO_DO: 'Te lezen', IN_PROGRESS: 'Aan het lezen', DONE: 'Gelezen' },
   DOCUMENTARY: { TO_DO: 'Te bekijken', IN_PROGRESS: 'Aan het bekijken', DONE: 'Bekeken' },
 };
+
+/** Hoogste niveau van het categoriepad; boeken zonder categorie vallen in "Onbekend". */
+export function topCategory(category: string | null): string {
+  return category?.split('/')[0].trim() || 'Onbekend';
+}

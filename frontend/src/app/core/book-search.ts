@@ -7,6 +7,7 @@ export interface BookSuggestion {
   authors: string[];
   description: string;
   coverUrl: string;
+  category?: string;
 }
 
 @Injectable({ providedIn: 'root' })

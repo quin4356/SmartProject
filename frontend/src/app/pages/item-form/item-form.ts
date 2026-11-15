@@ -72,6 +72,7 @@ export class ItemForm {
   readonly saving = signal(false);
   readonly errorMessage = signal<string | null>(null);
   protected readonly coverUrl = signal('');
+  private category = '';
 
   readonly isBook = computed(() => this.type() === 'BOOK');
   readonly heading = computed(() => (this.isBook() ? 'Boek toevoegen' : 'Documentaire toevoegen'));
@@ -142,6 +143,7 @@ export class ItemForm {
       rating: value.rating,
       description: value.description.trim() || null,
       cover_url: this.coverUrl() || null,
+      category: this.isBook() ? this.category || null : null,
     };
 
     this.saving.set(true);
@@ -164,6 +166,7 @@ export class ItemForm {
       return;
     }
     this.coverUrl.set(book.coverUrl);
+    this.category = book.category ?? '';
     this.form.patchValue({
       creatorName: book.authors.length
         ? book.authors.join(', ').slice(0, MAX_TEXT_LENGTH)
