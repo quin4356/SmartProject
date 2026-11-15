@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ItemStatus, ItemType, NewLibraryItem, STATUS_LABELS } from '../../core/models';
 import { LibraryItems } from '../../core/library-items';
 import { BookSearch, BookSuggestion } from '../../core/book-search';
+import { DocumentarySearch } from '../../core/documentary-search';
 
 const MAX_TEXT_LENGTH = 255;
 const MAX_DESCRIPTION_LENGTH = 5000;
@@ -64,6 +65,7 @@ export class ItemForm {
   private readonly router = inject(Router);
   private readonly libraryItems = inject(LibraryItems);
   private readonly bookSearch = inject(BookSearch);
+  private readonly documentarySearch = inject(DocumentarySearch);
 
   readonly type = input.required<ItemType>();
 
@@ -103,13 +105,21 @@ export class ItemForm {
       map((value) => value.trim()),
       distinctUntilChanged(),
       switchMap((query) =>
-        this.isBook() && query.length >= 2
-          ? from(this.bookSearch.search(query)).pipe(catchError(() => of([] as BookSuggestion[])))
+        query.length >= 2
+          ? from(this.searchSuggestions(query)).pipe(catchError(() => of([] as BookSuggestion[])))
           : of([] as BookSuggestion[]),
       ),
     ),
     { initialValue: [] as BookSuggestion[] },
   );
+
+  private async searchSuggestions(query: string): Promise<BookSuggestion[]> {
+    if (this.isBook()) {
+      return this.bookSearch.search(query);
+    }
+    const documentaries = await this.documentarySearch.search(query);
+    return documentaries.map((documentary) => ({ ...documentary, authors: [] }));
+  }
 
   async submit(): Promise<void> {
     this.errorMessage.set(null);
@@ -152,7 +162,9 @@ export class ItemForm {
     }
     this.coverUrl.set(book.coverUrl);
     this.form.patchValue({
-      creatorName: book.authors.join(', ').slice(0, MAX_TEXT_LENGTH),
+      creatorName: book.authors.length
+        ? book.authors.join(', ').slice(0, MAX_TEXT_LENGTH)
+        : this.form.controls.creatorName.value,
       description: book.description.replace(/<[^>]*>/g, '').slice(0, MAX_DESCRIPTION_LENGTH),
       startDate: this.form.controls.startDate.value ?? new Date(),
     });
