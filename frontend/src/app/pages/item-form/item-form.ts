@@ -69,6 +69,7 @@ export class ItemForm {
 
   readonly saving = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  protected readonly coverUrl = signal('');
 
   readonly isBook = computed(() => this.type() === 'BOOK');
   readonly heading = computed(() => (this.isBook() ? 'Boek toevoegen' : 'Documentaire toevoegen'));
@@ -79,9 +80,7 @@ export class ItemForm {
       label: STATUS_LABELS[this.type()][value],
     })),
   );
-  readonly listRoute = computed(() =>
-    this.isBook() ? '/library/books' : '/library/documentaries',
-  );
+  readonly listRoute = '/dashboard';
 
   readonly ratingOptions = [1, 2, 3, 4, 5];
 
@@ -129,12 +128,13 @@ export class ItemForm {
       end_date: toIsoDate(value.endDate),
       rating: value.rating,
       description: value.description.trim() || null,
+      cover_url: this.coverUrl() || null,
     };
 
     this.saving.set(true);
     try {
       await this.libraryItems.add(item);
-      await this.router.navigateByUrl(this.listRoute());
+      await this.router.navigateByUrl(this.listRoute);
     } catch {
       this.errorMessage.set('Opslaan is mislukt. Probeer het opnieuw.');
     } finally {
@@ -143,16 +143,18 @@ export class ItemForm {
   }
 
   cancel(): void {
-    void this.router.navigateByUrl(this.listRoute());
+    void this.router.navigateByUrl(this.listRoute);
   }
 
   protected selectBook(book: BookSuggestion, event: MatOptionSelectionChange): void {
     if (!event.isUserInput) {
       return;
     }
+    this.coverUrl.set(book.coverUrl);
     this.form.patchValue({
       creatorName: book.authors.join(', ').slice(0, MAX_TEXT_LENGTH),
       description: book.description.replace(/<[^>]*>/g, '').slice(0, MAX_DESCRIPTION_LENGTH),
+      startDate: this.form.controls.startDate.value ?? new Date(),
     });
   }
 }
