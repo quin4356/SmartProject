@@ -1,0 +1,51 @@
+<main class="to-read">
+  <header class="header">
+    <h1>Te lezen / bekijken</h1>
+    <a routerLink="/dashboard">Dashboard</a>
+  </header>
+
+  <div class="filters">
+    <label>
+      Soort
+      <select (change)="setType($event)">
+        <option value="">Alles</option>
+        <option value="BOOK">Boeken</option>
+        <option value="DOCUMENTARY">Documentaires</option>
+      </select>
+    </label>
+    <label>
+      Categorie
+      <select (change)="setCategory($event)">
+        <option value="">Alle</option>
+        @for (c of categories(); track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  @if (items.isLoading()) {
+    <mat-spinner diameter="32" />
+  } @else if (items.error()) {
+    <p>Laden is mislukt. Probeer het opnieuw.</p>
+  } @else if (filtered().length === 0) {
+    <p>Niets openstaand.</p>
+  } @else {
+    <ul class="list">
+      @for (item of filtered(); track item.id) {
+        <li [style.border-left-color]="color(item)">
+          @if (item.cover_url) {
+            <img [src]="item.cover_url" alt="" />
+          }
+          <div class="text">
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.creator_name }} · {{ label(item) }}</span>
+          </div>
+          <a [routerLink]="editLink(item.type, item.id)" [attr.aria-label]="'Bewerk ' + item.title">
+            Bewerk
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</main>
