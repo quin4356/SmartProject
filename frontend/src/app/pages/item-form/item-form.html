@@ -7,11 +7,24 @@
       <input matInput formControlName="title" maxlength="255" required [matAutocomplete]="auto" />
       <mat-autocomplete #auto="matAutocomplete">
         @for (book of suggestions(); track book.id) {
-          <mat-option [value]="book.title" (onSelectionChange)="selectBook(book, $event)">
-            {{ book.title }}
-            @if (book.authors.length) {
-              <span> · {{ book.authors.join(', ') }}</span>
-            }
+          <mat-option
+            class="suggestion-option"
+            [value]="book.title"
+            (onSelectionChange)="selectBook(book, $event)"
+          >
+            <div class="suggestion">
+              @if (book.coverUrl) {
+                <img class="suggestion-cover" [src]="book.coverUrl" alt="" />
+              } @else {
+                <div class="suggestion-cover suggestion-cover-empty"></div>
+              }
+              <div class="suggestion-text">
+                <span class="suggestion-title">{{ book.title }}</span>
+                @if (book.authors.length) {
+                  <span class="suggestion-author">{{ book.authors.join(', ') }}</span>
+                }
+              </div>
+            </div>
           </mat-option>
         }
       </mat-autocomplete>
