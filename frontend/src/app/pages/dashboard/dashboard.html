@@ -1,5 +1,81 @@
 <main class="dashboard">
-  <h1>Welkom, {{ displayName() }}</h1>
+  <h1>Dashboard</h1>
+
+  <section class="panel">
+    <h2>Jaardoel {{ currentYear }}</h2>
+    <p>{{ yearCount() }} van {{ goal }} boeken</p>
+    <div class="bar-track"><div class="bar-fill" [style.width.%]="goalPercent()"></div></div>
+  </section>
+
+  <section class="panel">
+    <h2>Kennis per categorie</h2>
+    @if (categories().length === 0) {
+      <p>Nog geen gelezen boeken.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr><th>Categorie</th><th>Boeken</th><th>Pagina's</th><th>Gem. rating</th></tr>
+        </thead>
+        <tbody>
+          @for (c of categories(); track c.category) {
+            <tr>
+              <td>{{ c.category }}</td>
+              <td>
+                <div class="bar-track small">
+                  <div class="bar-fill" [style.width.%]="(c.books / maxBooks()) * 100"></div>
+                </div>
+                {{ c.books }}
+              </td>
+              <td>{{ c.pages }}</td>
+              <td>{{ c.avgRating === null ? '–' : (c.avgRating | number: '1.1-1') }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  <section class="panel">
+    <h2>Verloop</h2>
+    <label>
+      Jaar
+      <select (change)="selectYear($event)">
+        @for (y of years(); track y) {
+          <option [value]="y" [selected]="y === selectedYear()">{{ y }}</option>
+        }
+      </select>
+    </label>
+    <div class="months">
+      @for (n of perMonth(); track $index) {
+        <div class="month">
+          <span>{{ n }}</span>
+          <div class="column" [style.height.px]="(n / maxMonth()) * 80"></div>
+          <span>{{ months[$index] }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Leestempo</h2>
+    @if (pace() === null) {
+      <p>Nog onvoldoende gegevens.</p>
+    } @else {
+      <p>{{ pace() | number: '1.0-0' }} pagina's per dag</p>
+    }
+  </section>
+
+  @if (authors().length) {
+    <details class="authors">
+      <summary>Auteurs</summary>
+      <ul>
+        @for (a of authors(); track a.author) {
+          <li>{{ a.author }} ({{ a.books }})</li>
+        }
+      </ul>
+    </details>
+  }
+
   <app-library-list type="BOOK" />
   <app-library-list type="DOCUMENTARY" />
 </main>
