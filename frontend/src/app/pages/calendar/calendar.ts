@@ -1,6 +1,8 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { LibraryItems } from '../../core/library-items';
 import { LibraryItem, todayIso } from '../../core/models';
 import { categoryColor, categoryLabel } from '../../core/category-colors';
@@ -30,7 +32,7 @@ const dayNumber = (iso: string) => Date.parse(iso) / DAY_MS;
 
 @Component({
   selector: 'app-calendar',
-  imports: [RouterLink, MatProgressSpinnerModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss',
 })
