@@ -204,8 +204,8 @@ export class ItemForm implements OnInit {
     try {
       const id = this.id();
       if (id) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { type, ...changes } = item;
+        const changes: Partial<NewLibraryItem> = { ...item };
+        delete changes.type;
         await this.libraryItems.update(id, changes);
       } else {
         await this.libraryItems.add(item);
