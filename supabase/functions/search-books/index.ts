@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     q,
     maxResults: String(MAX_RESULTS),
     printType: 'books',
-    fields: 'items(id,volumeInfo(title,authors,description))',
+    fields: 'items(id,volumeInfo(title,authors,description,imageLinks/thumbnail))',
   });
   const apiKey = Deno.env.get('GOOGLE_BOOKS_API_KEY');
   if (apiKey) {
@@ -48,6 +48,7 @@ Deno.serve(async (req) => {
     title: item.volumeInfo?.title ?? '',
     authors: item.volumeInfo?.authors ?? [],
     description: item.volumeInfo?.description ?? '',
+    coverUrl: (item.volumeInfo?.imageLinks?.thumbnail ?? '').replace('http://', 'https://'),
   }));
   return json(results);
 });
