@@ -34,6 +34,18 @@ export const routes: Routes = [
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
+  {
+    path: 'library/books/:id/edit',
+    component: ItemForm,
+    data: { type: 'BOOK' },
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/documentaries/:id/edit',
+    component: ItemForm,
+    data: { type: 'DOCUMENTARY' },
+    canActivate: [authGuard],
+  },
   { path: 'privacy', component: Privacy },
   { path: 'terms', component: Terms },
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },

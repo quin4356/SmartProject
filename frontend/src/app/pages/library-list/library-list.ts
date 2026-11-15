@@ -28,6 +28,10 @@ export class LibraryList {
     this.type() === 'BOOK' ? '/library/books/new' : '/library/documentaries/new',
   );
 
+  protected readonly editBase = computed(() =>
+    this.type() === 'BOOK' ? '/library/books' : '/library/documentaries',
+  );
+
   protected readonly items = resource({
     params: () => this.type(),
     loader: ({ params }) => this.libraryItems.list(params),

@@ -40,3 +40,26 @@ export const STATUS_LABELS: Record<ItemType, Record<ItemStatus, string>> = {
 export function topCategory(category: string | null): string {
   return category?.split('/')[0].trim() || 'Onbekend';
 }
+
+
+export function todayIso(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+/** Automatische datums bij een statuswijziging (old = null bij een nieuw item). */
+export function datesForStatus(
+  old: ItemStatus | null,
+  next: ItemStatus,
+  start: string | null,
+  end: string | null,
+): { start_date: string | null; end_date: string | null } {
+  const today = todayIso();
+  if (next === 'TO_DO') {
+    return { start_date: null, end_date: null };
+  }
+  if (next === 'IN_PROGRESS') {
+    return { start_date: old === 'DONE' ? start : today, end_date: null };
+  }
+  return { start_date: start ?? today, end_date: today };
+}

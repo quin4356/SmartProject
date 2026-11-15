@@ -32,6 +32,13 @@
             </div>
           </div>
           <mat-card-actions align="end">
+            <a
+              mat-icon-button
+              [routerLink]="[editBase(), item.id, 'edit']"
+              [attr.aria-label]="'Bewerk ' + item.title"
+            >
+              <mat-icon>edit</mat-icon>
+            </a>
             <button
               mat-stroked-button
               color="warn"
