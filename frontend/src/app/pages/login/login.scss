@@ -12,6 +12,10 @@
   }
 
   &__error {
-    color: #b3261e;
+    color: var(--mat-sys-error);
+  }
+
+  &__consent {
+    font-size: 0.875rem;
   }
 }
