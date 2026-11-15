@@ -116,7 +116,6 @@ export class ItemForm implements OnInit {
           this.loaded?.status ?? null,
           status,
           toIsoDate(this.form.controls.startDate.value),
-          toIsoDate(this.form.controls.endDate.value),
         );
         this.form.patchValue({
           startDate: this.fromIsoDate(dates.start_date),
@@ -191,7 +190,7 @@ export class ItemForm implements OnInit {
       status: value.status,
       ...(this.editing()
         ? { start_date: toIsoDate(value.startDate), end_date: toIsoDate(value.endDate) }
-        : datesForStatus(null, value.status, null, null)),
+        : datesForStatus(null, value.status, null)),
       rating: value.rating,
       description: value.description.trim() || null,
       cover_url: this.coverUrl() || null,
@@ -203,7 +202,8 @@ export class ItemForm implements OnInit {
     try {
       const id = this.id();
       if (id) {
-        const { type, ...changes } = item;
+        const changes: Partial<NewLibraryItem> = { ...item };
+        delete changes.type;
         await this.libraryItems.update(id, changes);
       } else {
         await this.libraryItems.add(item);

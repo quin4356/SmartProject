@@ -52,7 +52,6 @@ export function datesForStatus(
   old: ItemStatus | null,
   next: ItemStatus,
   start: string | null,
-  end: string | null,
 ): { start_date: string | null; end_date: string | null } {
   const today = todayIso();
   if (next === 'TO_DO') {

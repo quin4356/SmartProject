@@ -4,6 +4,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
 import { LibraryItems } from '../../core/library-items';
 import { ItemType, STATUS_LABELS, topCategory } from '../../core/models';
@@ -19,6 +20,7 @@ import { Component, computed, inject, input, resource, signal } from '@angular/c
 export class LibraryList {
   private readonly libraryItems = inject(LibraryItems);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly type = input.required<ItemType>();
 
@@ -60,7 +62,7 @@ export class LibraryList {
       this.items.reload();
     } catch (err) {
       console.error('Delete failed:', err);
-      alert('Delete failed. Please try again.');
+      this.snackBar.open('Verwijderen mislukt. Probeer het opnieuw.', 'Sluiten', { duration: 5000 });
     } finally {
       this.deleting.set({ ...this.deleting(), [id]: false });
     }
