@@ -6,7 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { LibraryItems } from '../../core/library-items';
-import { ItemType, STATUS_LABELS, topCategory } from '../../core/models';
+import { ItemStatus, ItemType, STATUS_LABELS, topCategory } from '../../core/models';
+import { SortKey, filterItems } from '../../core/list-filter';
 import { ConfirmDialog } from '../../shared/confirm-dialog';
 import { Component, computed, inject, input, resource, signal } from '@angular/core';
 
@@ -36,6 +37,33 @@ export class LibraryList {
     params: () => this.type(),
     loader: ({ params }) => this.libraryItems.list(params),
   });
+
+  protected readonly query = signal('');
+  protected readonly statusFilter = signal<ItemStatus | ''>('');
+  protected readonly sort = signal<SortKey>('newest');
+
+  protected readonly statusOptions = computed(() =>
+    (Object.keys(STATUS_LABELS[this.type()]) as ItemStatus[]).map((value) => ({
+      value,
+      label: STATUS_LABELS[this.type()][value],
+    })),
+  );
+
+  protected readonly visible = computed(() =>
+    filterItems(this.items.value() ?? [], this.query(), this.statusFilter(), this.sort()),
+  );
+
+  protected setQuery(event: Event): void {
+    this.query.set((event.target as HTMLInputElement).value);
+  }
+
+  protected setStatus(event: Event): void {
+    this.statusFilter.set((event.target as HTMLSelectElement).value as ItemStatus | '');
+  }
+
+  protected setSort(event: Event): void {
+    this.sort.set((event.target as HTMLSelectElement).value as SortKey);
+  }
 
   protected readonly deleting = signal<Record<string, boolean>>({});
 
