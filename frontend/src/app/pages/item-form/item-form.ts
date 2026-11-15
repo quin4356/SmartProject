@@ -118,7 +118,10 @@ export class ItemForm {
       return this.bookSearch.search(query);
     }
     const documentaries = await this.documentarySearch.search(query);
-    return documentaries.map((documentary) => ({ ...documentary, authors: [] }));
+    return documentaries.map((documentary) => ({
+      ...documentary,
+      authors: documentary.creator ? [documentary.creator] : [],
+    }));
   }
 
   async submit(): Promise<void> {

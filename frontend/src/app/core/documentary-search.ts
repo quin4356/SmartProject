@@ -4,6 +4,7 @@ import { Supabase } from './supabase';
 export interface DocumentarySuggestion {
   id: string;
   title: string;
+  creator: string;
   description: string;
   coverUrl: string;
 }
