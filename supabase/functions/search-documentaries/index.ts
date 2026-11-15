@@ -1,4 +1,5 @@
 const TMDB_URL = 'https://api.themoviedb.org/3/search/movie';
+const TMDB_MOVIE_URL = 'https://api.themoviedb.org/3/movie';
 const TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/w185';
 const DOCUMENTARY_GENRE_ID = 99;
 const MAX_RESULTS = 5;
@@ -15,6 +16,19 @@ function json(body: unknown, status = 200): Response {
     status,
     headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
   });
+}
+
+async function findDirector(id: number, apiKey: string): Promise<string> {
+  const params = new URLSearchParams({ api_key: apiKey });
+  const response = await fetch(`${TMDB_MOVIE_URL}/${id}/credits?${params}`);
+  if (!response.ok) {
+    return '';
+  }
+  const data = await response.json();
+  const directors = (data.crew ?? [])
+    .filter((person: any) => person.job === 'Director')
+    .sort((a: any, b: any) => (b.popularity ?? 0) - (a.popularity ?? 0));
+  return directors[0]?.name ?? '';
 }
 
 Deno.serve(async (req) => {
@@ -40,14 +54,17 @@ Deno.serve(async (req) => {
   }
 
   const data = await response.json();
-  const results = (data.results ?? [])
+  const matches = (data.results ?? [])
     .filter((item: any) => item.genre_ids?.includes(DOCUMENTARY_GENRE_ID))
-    .slice(0, MAX_RESULTS)
-    .map((item: any) => ({
+    .slice(0, MAX_RESULTS);
+  const results = await Promise.all(
+    matches.map(async (item: any) => ({
       id: String(item.id),
       title: item.title ?? '',
+      creator: await findDirector(item.id, apiKey),
       description: item.overview ?? '',
       coverUrl: item.poster_path ? `${TMDB_IMAGE_URL}${item.poster_path}` : '',
-    }));
+    })),
+  );
   return json(results);
 });
