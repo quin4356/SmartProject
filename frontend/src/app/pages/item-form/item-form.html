@@ -54,24 +54,26 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="row">
-      <mat-form-field appearance="outline">
-        <mat-label>Startdatum</mat-label>
-        <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
-        <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
-        <mat-datepicker #startPicker />
-      </mat-form-field>
+    @if (editing()) {
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Startdatum</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+          <mat-datepicker #startPicker />
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Einddatum</mat-label>
-        <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
-        <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
-        <mat-datepicker #endPicker />
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Einddatum</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+          <mat-datepicker #endPicker />
+        </mat-form-field>
+      </div>
 
-    @if (form.hasError('endBeforeStart') && form.controls.endDate.touched) {
-      <p class="form-error full">De einddatum mag niet voor de startdatum liggen.</p>
+      @if (form.hasError('endBeforeStart') && form.controls.endDate.touched) {
+        <p class="form-error full">De einddatum mag niet voor de startdatum liggen.</p>
+      }
     }
 
     <mat-form-field appearance="outline">
