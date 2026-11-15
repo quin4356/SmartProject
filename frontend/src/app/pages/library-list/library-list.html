@@ -4,15 +4,32 @@
     <a mat-flat-button [routerLink]="addRoute()">Toevoegen</a>
   </header>
 
+  <div class="filters">
+    <input type="search" placeholder="Zoeken…" aria-label="Zoeken" (input)="setQuery($event)" />
+    <select aria-label="Status" (change)="setStatus($event)">
+      <option value="">Alle statussen</option>
+      @for (o of statusOptions(); track o.value) {
+        <option [value]="o.value">{{ o.label }}</option>
+      }
+    </select>
+    <select aria-label="Sorteren" (change)="setSort($event)">
+      <option value="newest">Nieuwste eerst</option>
+      <option value="title">Titel A–Z</option>
+      <option value="rating">Beoordeling</option>
+    </select>
+  </div>
+
   @if (items.isLoading()) {
     <mat-spinner diameter="32" />
   } @else if (items.error()) {
     <p>Laden is mislukt. Probeer het opnieuw.</p>
   } @else if (items.value()?.length === 0) {
     <p>Nog niets toegevoegd.</p>
+  } @else if (visible().length === 0) {
+    <p>Geen resultaten.</p>
   } @else {
     <div class="grid">
-      @for (item of items.value(); track item.id) {
+      @for (item of visible(); track item.id) {
         <mat-card>
           <div class="item-main">
             @if (item.cover_url) {
@@ -20,11 +37,16 @@
             }
             <div class="item-text">
               <mat-card-header>
-                <mat-card-title>{{ item.title }}</mat-card-title>
+                <mat-card-title>
+                  <a [routerLink]="[editBase(), item.id]">{{ item.title }}</a>
+                </mat-card-title>
                 <mat-card-subtitle>{{ item.creator_name }}</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
                 {{ statusLabel(item.type, item.status) }}
+                @if (item.rating) {
+                  · {{ item.rating }}/5
+                }
                 @if (item.type === 'BOOK') {
                   · <span [title]="item.category ?? ''">{{ topCategory(item.category) }}</span>
                 }

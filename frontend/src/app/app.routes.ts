@@ -8,6 +8,7 @@ import { Calendar } from './pages/calendar/calendar';
 import { ToRead } from './pages/to-read/to-read';
 import { Privacy } from './pages/privacy/privacy';
 import { Terms } from './pages/terms/terms';
+import { ItemDetail } from './pages/item-detail/item-detail';
 
 export const routes: Routes = [
   { path: 'login', component: Login, canActivate: [guestGuard] },
@@ -45,6 +46,18 @@ export const routes: Routes = [
   {
     path: 'library/documentaries/:id/edit',
     component: ItemForm,
+    data: { type: 'DOCUMENTARY' },
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/books/:id',
+    component: ItemDetail,
+    data: { type: 'BOOK' },
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/documentaries/:id',
+    component: ItemDetail,
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
