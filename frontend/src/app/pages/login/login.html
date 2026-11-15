@@ -9,6 +9,11 @@
       @if (errorMessage()) {
         <p class="login__error">{{ errorMessage() }}</p>
       }
+      <p class="login__consent">
+        Door aan te melden ga je akkoord met de
+        <a routerLink="/terms">gebruiksvoorwaarden</a> en het
+        <a routerLink="/privacy">privacybeleid</a>.
+      </p>
     </mat-card-content>
     <mat-card-actions>
       <button mat-flat-button type="button" (click)="signInWithGoogle()">

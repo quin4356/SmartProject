@@ -33,6 +33,14 @@ export class Auth {
     }
   }
 
+  async deleteAccount(): Promise<void> {
+    const { error } = await this.supabase.client.functions.invoke('delete-account');
+    if (error) {
+      throw error;
+    }
+    await this.signOut().catch(() => undefined);
+  }
+
   async signOut(): Promise<void> {
     const { error } = await this.supabase.client.auth.signOut();
     if (error) {
