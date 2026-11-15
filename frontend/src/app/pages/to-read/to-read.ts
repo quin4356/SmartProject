@@ -1,15 +1,13 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { LibraryItems } from '../../core/library-items';
 import { ItemType } from '../../core/models';
 import { categoryColor, categoryLabel } from '../../core/category-colors';
 
 @Component({
   selector: 'app-to-read',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [RouterLink, MatProgressSpinnerModule],
   templateUrl: './to-read.html',
   styleUrl: './to-read.scss',
 })

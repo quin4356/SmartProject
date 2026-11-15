@@ -1,8 +1,5 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { LibraryItems } from '../../core/library-items';
 import {
   YEAR_GOAL,
@@ -19,7 +16,7 @@ const MONTHS = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', '
 
 @Component({
   selector: 'app-dashboard',
-  imports: [LibraryList, DecimalPipe, RouterLink, MatButtonModule, MatIconModule],
+  imports: [LibraryList, DecimalPipe],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
