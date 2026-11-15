@@ -106,4 +106,8 @@
       </button>
     </div>
   </form>
+
+  @if (id(); as itemId) {
+    <app-item-extras [itemId]="itemId" [itemTitle]="form.controls.title.value" [type]="type()" />
+  }
 </main>
