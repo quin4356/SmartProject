@@ -36,6 +36,16 @@
     column-gap: 1.25rem;
   }
 
+  .form-cover {
+    grid-column: 1 / -1;
+    justify-self: start;
+    width: 88px;
+    height: 128px;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
   .form-error {
     margin: 0 0 1rem;
     color: var(--mat-sys-error);

@@ -14,11 +14,18 @@
     <div class="grid">
       @for (item of items.value(); track item.id) {
         <mat-card>
-          <mat-card-header>
-            <mat-card-title>{{ item.title }}</mat-card-title>
-            <mat-card-subtitle>{{ item.creator_name }}</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>{{ statusLabel(item.type, item.status) }}</mat-card-content>
+          <div class="item-main">
+            @if (item.cover_url) {
+              <img class="item-cover" [src]="item.cover_url" alt="Omslag" />
+            }
+            <div class="item-text">
+              <mat-card-header>
+                <mat-card-title>{{ item.title }}</mat-card-title>
+                <mat-card-subtitle>{{ item.creator_name }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>{{ statusLabel(item.type, item.status) }}</mat-card-content>
+            </div>
+          </div>
           <mat-card-actions align="end">
             <button mat-stroked-button color="warn" (click)="deleteItem(item.id)">
               <mat-icon>delete</mat-icon>

@@ -33,6 +33,10 @@
       }
     </mat-form-field>
 
+    @if (coverUrl()) {
+      <img class="form-cover" [src]="coverUrl()" alt="Omslag" />
+    }
+
     <mat-form-field appearance="outline">
       <mat-label>{{ creatorLabel() }}</mat-label>
       <input matInput formControlName="creatorName" maxlength="255" required />
