@@ -1,0 +1,60 @@
+<main class="calendar">
+  <header class="header">
+    <h1>Kalender</h1>
+  </header>
+
+  <div class="nav">
+    <button type="button" (click)="shiftBack()" aria-label="Eerder">‹</button>
+    <button type="button" (click)="reset()">Vandaag</button>
+    <button type="button" (click)="shiftForward()" aria-label="Later">›</button>
+    <span class="range">{{ rangeLabel() }}</span>
+  </div>
+
+  @if (items.isLoading()) {
+    <mat-spinner diameter="32" />
+  } @else if (items.error()) {
+    <p>Laden is mislukt. Probeer het opnieuw.</p>
+  } @else {
+    <div class="timeline">
+      <div class="axis">
+        @for (t of ticks(); track t.left) {
+          <span class="tick" [style.left.%]="t.left">{{ t.label }}</span>
+        }
+        @if (nowLeft() !== null) {
+          <span class="now" [style.left.%]="nowLeft()">Nu</span>
+        }
+      </div>
+
+      <div class="body">
+        @for (t of ticks(); track t.left) {
+          <span class="gridline" [style.left.%]="t.left"></span>
+        }
+        @if (nowLeft() !== null) {
+          <span class="now-line" [style.left.%]="nowLeft()"></span>
+        }
+
+        @for (row of rows(); track $index) {
+          <div class="row">
+            @for (bar of row; track bar.item.id) {
+              <div class="bar" [style.left.%]="bar.left" [style.width.%]="bar.width" [title]="bar.item.title">
+                <span class="fill" [style.background]="color(bar.item)"></span>
+                <span class="label">
+                  {{ bar.item.title }}
+                  <em>{{ bar.days }} {{ bar.days === 1 ? 'dag' : 'dagen' }}</em>
+                </span>
+              </div>
+            }
+          </div>
+        } @empty {
+          <p class="empty">Niets in deze periode.</p>
+        }
+      </div>
+    </div>
+
+    <ul class="legend">
+      @for (l of legend(); track l.label) {
+        <li><span class="swatch" [style.background]="l.color"></span>{{ l.label }}</li>
+      }
+    </ul>
+  }
+</main>

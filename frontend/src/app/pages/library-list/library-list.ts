@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { LibraryItems } from '../../core/library-items';
-import { ItemType, STATUS_LABELS } from '../../core/models';
+import { ItemType, STATUS_LABELS, topCategory } from '../../core/models';
 import { ConfirmDialog } from '../../shared/confirm-dialog';
 import { Component, computed, inject, input, resource, signal } from '@angular/core';
 
@@ -28,12 +28,18 @@ export class LibraryList {
     this.type() === 'BOOK' ? '/library/books/new' : '/library/documentaries/new',
   );
 
+  protected readonly editBase = computed(() =>
+    this.type() === 'BOOK' ? '/library/books' : '/library/documentaries',
+  );
+
   protected readonly items = resource({
     params: () => this.type(),
     loader: ({ params }) => this.libraryItems.list(params),
   });
 
   protected readonly deleting = signal<Record<string, boolean>>({});
+
+  protected readonly topCategory = topCategory;
 
   protected statusLabel(type: ItemType, status: keyof (typeof STATUS_LABELS)['BOOK']): string {
     return STATUS_LABELS[type][status];

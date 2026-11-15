@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,10 +10,25 @@ import { ConfirmDialog } from './confirm-dialog';
 
 @Component({
   selector: 'app-account-menu',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, RouterLink],
   template: `
     @if (user()) {
       <header class="account">
+        <button
+          mat-icon-button
+          class="account__nav"
+          [matMenuTriggerFor]="nav"
+          aria-label="Navigatiemenu"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #nav="matMenu" xPosition="after">
+          <a mat-menu-item routerLink="/dashboard"><mat-icon>dashboard</mat-icon>Dashboard</a>
+          <a mat-menu-item routerLink="/calendar"><mat-icon>calendar_month</mat-icon>Kalender</a>
+          <a mat-menu-item routerLink="/to-read">
+            <mat-icon>bookmark</mat-icon>Te lezen / bekijken
+          </a>
+        </mat-menu>
         <button mat-button [matMenuTriggerFor]="menu" aria-label="Accountmenu">
           @if (avatarUrl()) {
             <img class="account__avatar" [src]="avatarUrl()" alt="" referrerpolicy="no-referrer" />
@@ -49,6 +64,9 @@ import { ConfirmDialog } from './confirm-dialog';
       justify-content: flex-end;
       gap: 1rem;
       padding: 0.5rem 1rem;
+    }
+    .account__nav {
+      margin-right: auto;
     }
     .account__avatar {
       width: 24px;

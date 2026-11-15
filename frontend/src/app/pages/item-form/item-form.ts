@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,7 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatOptionSelectionChange, provideNativeDateAdapter } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ItemStatus, ItemType, NewLibraryItem, STATUS_LABELS } from '../../core/models';
+import { ItemStatus, ItemType, LibraryItem, NewLibraryItem, STATUS_LABELS, datesForStatus } from '../../core/models';
 import { LibraryItems } from '../../core/library-items';
 import { BookSearch, BookSuggestion } from '../../core/book-search';
 import { DocumentarySearch } from '../../core/documentary-search';
@@ -60,7 +60,7 @@ function toIsoDate(date: Date | null): string | null {
   templateUrl: './item-form.html',
   styleUrl: './item-form.scss',
 })
-export class ItemForm {
+export class ItemForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly libraryItems = inject(LibraryItems);
@@ -68,13 +68,21 @@ export class ItemForm {
   private readonly documentarySearch = inject(DocumentarySearch);
 
   readonly type = input.required<ItemType>();
+  readonly id = input<string>();
+  private loaded: LibraryItem | null = null;
 
   readonly saving = signal(false);
   readonly errorMessage = signal<string | null>(null);
   protected readonly coverUrl = signal('');
+  private category = '';
+  private pageCount: number | null = null;
 
   readonly isBook = computed(() => this.type() === 'BOOK');
-  readonly heading = computed(() => (this.isBook() ? 'Boek toevoegen' : 'Documentaire toevoegen'));
+  readonly editing = computed(() => !!this.id());
+  readonly heading = computed(() => {
+    const noun = this.isBook() ? 'Boek' : 'Documentaire';
+    return `${noun} ${this.editing() ? 'bewerken' : 'toevoegen'}`;
+  });
   readonly creatorLabel = computed(() => (this.isBook() ? 'Auteur' : 'Maker'));
   readonly statusOptions = computed(() =>
     (Object.keys(STATUS_LABELS[this.type()]) as ItemStatus[]).map((value) => ({
@@ -83,6 +91,50 @@ export class ItemForm {
     })),
   );
   readonly listRoute = '/dashboard';
+
+  async ngOnInit(): Promise<void> {
+    const id = this.id();
+    if (!id) {
+      return;
+    }
+    try {
+      const item = (this.loaded = await this.libraryItems.get(id));
+      this.coverUrl.set(item.cover_url ?? '');
+      this.category = item.category ?? '';
+      this.pageCount = item.page_count;
+      this.form.patchValue({
+        title: item.title,
+        creatorName: item.creator_name,
+        status: item.status,
+        startDate: this.fromIsoDate(item.start_date),
+        endDate: this.fromIsoDate(item.end_date),
+        rating: item.rating,
+        description: item.description ?? '',
+      });
+      this.form.controls.status.valueChanges.subscribe((status) => {
+        const dates = datesForStatus(
+          this.loaded?.status ?? null,
+          status,
+          toIsoDate(this.form.controls.startDate.value),
+          toIsoDate(this.form.controls.endDate.value),
+        );
+        this.form.patchValue({
+          startDate: this.fromIsoDate(dates.start_date),
+          endDate: this.fromIsoDate(dates.end_date),
+        });
+      });
+    } catch {
+      this.errorMessage.set('Laden is mislukt.');
+    }
+  }
+
+  private fromIsoDate(value: string | null): Date | null {
+    if (!value) {
+      return null;
+    }
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
 
   readonly ratingOptions = [1, 2, 3, 4, 5];
 
@@ -137,16 +189,25 @@ export class ItemForm {
       title: value.title.trim(),
       creator_name: value.creatorName.trim(),
       status: value.status,
-      start_date: toIsoDate(value.startDate),
-      end_date: toIsoDate(value.endDate),
+      ...(this.editing()
+        ? { start_date: toIsoDate(value.startDate), end_date: toIsoDate(value.endDate) }
+        : datesForStatus(null, value.status, null, null)),
       rating: value.rating,
       description: value.description.trim() || null,
       cover_url: this.coverUrl() || null,
+      category: this.isBook() ? this.category || null : null,
+      page_count: this.isBook() ? this.pageCount : null,
     };
 
     this.saving.set(true);
     try {
-      await this.libraryItems.add(item);
+      const id = this.id();
+      if (id) {
+        const { type, ...changes } = item;
+        await this.libraryItems.update(id, changes);
+      } else {
+        await this.libraryItems.add(item);
+      }
       await this.router.navigateByUrl(this.listRoute);
     } catch {
       this.errorMessage.set('Opslaan is mislukt. Probeer het opnieuw.');
@@ -164,12 +225,13 @@ export class ItemForm {
       return;
     }
     this.coverUrl.set(book.coverUrl);
+    this.category = book.category ?? '';
+    this.pageCount = book.pageCount ?? null;
     this.form.patchValue({
       creatorName: book.authors.length
         ? book.authors.join(', ').slice(0, MAX_TEXT_LENGTH)
         : this.form.controls.creatorName.value,
       description: book.description.replace(/<[^>]*>/g, '').slice(0, MAX_DESCRIPTION_LENGTH),
-      startDate: this.form.controls.startDate.value ?? new Date(),
     });
   }
 }

@@ -25,6 +25,18 @@ export class LibraryItems {
     return data as LibraryItem[];
   }
 
+  async get(id: string): Promise<LibraryItem> {
+    const { data, error } = await this.supabase.client
+      .from('library_items')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error) {
+      throw error;
+    }
+    return data as LibraryItem;
+  }
+
   async add(item: NewLibraryItem): Promise<LibraryItem> {
     const userId = this.auth.user()?.id;
     if (!userId) {
