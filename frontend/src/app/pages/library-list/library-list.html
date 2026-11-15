@@ -27,7 +27,12 @@
             </div>
           </div>
           <mat-card-actions align="end">
-            <button mat-stroked-button color="warn" (click)="deleteItem(item.id)">
+            <button
+              mat-stroked-button
+              color="warn"
+              (click)="deleteItem(item.id)"
+              [attr.aria-label]="'Verwijder ' + item.title"
+            >
               <mat-icon>delete</mat-icon>
               Delete
             </button>
