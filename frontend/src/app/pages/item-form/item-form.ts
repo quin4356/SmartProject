@@ -21,6 +21,7 @@ import { ItemStatus, ItemType, LibraryItem, NewLibraryItem, STATUS_LABELS, dates
 import { LibraryItems } from '../../core/library-items';
 import { BookSearch, BookSuggestion } from '../../core/book-search';
 import { DocumentarySearch } from '../../core/documentary-search';
+import { ItemExtrasPanel } from '../../shared/item-extras';
 
 const MAX_TEXT_LENGTH = 255;
 const MAX_DESCRIPTION_LENGTH = 5000;
@@ -55,6 +56,7 @@ function toIsoDate(date: Date | null): string | null {
     MatSelectModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
+    ItemExtrasPanel,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './item-form.html',
