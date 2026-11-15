@@ -28,7 +28,7 @@ async function findDirector(id: number, apiKey: string): Promise<string> {
   const directors = (data.crew ?? [])
     .filter((person: any) => person.job === 'Director')
     .sort((a: any, b: any) => (b.popularity ?? 0) - (a.popularity ?? 0));
-  return directors[0]?.name ?? '';
+  return [...new Set(directors.map((person: any) => person.name))].join(', ');
 }
 
 Deno.serve(async (req) => {
