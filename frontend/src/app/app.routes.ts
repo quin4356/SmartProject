@@ -4,6 +4,8 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { authGuard, guestGuard } from './core/auth-guard';
 import { LibraryList } from './pages/library-list/library-list';
 import { ItemForm } from './pages/item-form/item-form';
+import { Privacy } from './pages/privacy/privacy';
+import { Terms } from './pages/terms/terms';
 
 export const routes: Routes = [
   { path: 'login', component: Login, canActivate: [guestGuard] },
@@ -32,6 +34,8 @@ export const routes: Routes = [
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
+  { path: 'privacy', component: Privacy },
+  { path: 'terms', component: Terms },
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' },
 ];

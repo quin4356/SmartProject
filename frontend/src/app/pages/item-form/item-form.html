@@ -34,7 +34,7 @@
     </mat-form-field>
 
     @if (coverUrl()) {
-      <img class="form-cover" [src]="coverUrl()" alt="Omslag" />
+      <img class="form-cover" [src]="coverUrl()" [alt]="'Omslag van ' + form.controls.title.value" />
     }
 
     <mat-form-field appearance="outline">
@@ -97,7 +97,7 @@
       <button mat-button type="button" (click)="cancel()" [disabled]="saving()">Annuleren</button>
       <button mat-flat-button type="submit" [disabled]="saving()">
         @if (saving()) {
-          <mat-spinner diameter="20" />
+          <mat-spinner diameter="20" aria-label="Bezig met opslaan" />
         } @else {
           Opslaan
         }

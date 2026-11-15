@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth';
 
 @Component({
   selector: 'app-login',
-  imports: [MatButtonModule, MatCardModule],
+  imports: [MatButtonModule, MatCardModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
