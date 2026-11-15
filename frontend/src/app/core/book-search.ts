@@ -8,6 +8,7 @@ export interface BookSuggestion {
   description: string;
   coverUrl: string;
   category?: string;
+  pageCount?: number | null;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -75,6 +75,7 @@ export class ItemForm implements OnInit {
   readonly errorMessage = signal<string | null>(null);
   protected readonly coverUrl = signal('');
   private category = '';
+  private pageCount: number | null = null;
 
   readonly isBook = computed(() => this.type() === 'BOOK');
   readonly editing = computed(() => !!this.id());
@@ -100,6 +101,7 @@ export class ItemForm implements OnInit {
       const item = (this.loaded = await this.libraryItems.get(id));
       this.coverUrl.set(item.cover_url ?? '');
       this.category = item.category ?? '';
+      this.pageCount = item.page_count;
       this.form.patchValue({
         title: item.title,
         creatorName: item.creator_name,
@@ -194,6 +196,7 @@ export class ItemForm implements OnInit {
       description: value.description.trim() || null,
       cover_url: this.coverUrl() || null,
       category: this.isBook() ? this.category || null : null,
+      page_count: this.isBook() ? this.pageCount : null,
     };
 
     this.saving.set(true);
@@ -223,6 +226,7 @@ export class ItemForm implements OnInit {
     }
     this.coverUrl.set(book.coverUrl);
     this.category = book.category ?? '';
+    this.pageCount = book.pageCount ?? null;
     this.form.patchValue({
       creatorName: book.authors.length
         ? book.authors.join(', ').slice(0, MAX_TEXT_LENGTH)

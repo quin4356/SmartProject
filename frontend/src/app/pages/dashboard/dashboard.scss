@@ -3,3 +3,71 @@
   margin: 0 auto;
   padding: 2rem 1rem;
 }
+.panel {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.4rem 0.5rem;
+    text-align: left;
+  }
+}
+
+.bar-track {
+  height: 0.6rem;
+  background: var(--mat-sys-outline-variant);
+
+  &.small {
+    display: inline-block;
+    width: 6rem;
+    margin-right: 0.5rem;
+  }
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--mat-sys-primary);
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-items: end;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.month {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 0.75rem;
+}
+
+.column {
+  width: 100%;
+  min-height: 2px;
+  background: var(--mat-sys-primary);
+}
+
+.authors {
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
