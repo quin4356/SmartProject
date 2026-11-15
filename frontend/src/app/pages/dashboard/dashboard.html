@@ -2,9 +2,4 @@
   <h1>Welkom, {{ displayName() }}</h1>
   <app-library-list type="BOOK" />
   <app-library-list type="DOCUMENTARY" />
-  <button mat-stroked-button (click)="signOut()">Uitloggen</button>
-  <button mat-stroked-button color="warn" (click)="deleteAccount()">Account verwijderen</button>
-  @if (errorMessage()) {
-    <p class="dashboard__error">{{ errorMessage() }}</p>
-  }
 </main>
