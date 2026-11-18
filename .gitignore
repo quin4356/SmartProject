@@ -5,3 +5,4 @@ supabase/.temp/
 supabase/.branches/
 CLAUDE.md
 mood_website.jpg
+!.env.example
