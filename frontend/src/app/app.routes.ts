@@ -1,70 +1,61 @@
 import { Routes } from '@angular/router';
-import { Login } from './pages/login/login';
-import { Dashboard } from './pages/dashboard/dashboard';
 import { authGuard, guestGuard } from './core/auth-guard';
-import { LibraryList } from './pages/library-list/library-list';
-import { ItemForm } from './pages/item-form/item-form';
-import { Calendar } from './pages/calendar/calendar';
-import { ToRead } from './pages/to-read/to-read';
-import { Privacy } from './pages/privacy/privacy';
-import { Terms } from './pages/terms/terms';
-import { ItemDetail } from './pages/item-detail/item-detail';
 
 export const routes: Routes = [
-  { path: 'login', component: Login, canActivate: [guestGuard] },
-  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
+  { path: 'login', loadComponent: () => import('./pages/login/login').then((m) => m.Login), canActivate: [guestGuard] },
+  { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard), canActivate: [authGuard] },
   {
     path: 'library/books',
-    component: LibraryList,
+    loadComponent: () => import('./pages/library-list/library-list').then((m) => m.LibraryList),
     data: { type: 'BOOK' },
     canActivate: [authGuard],
   },
   {
     path: 'library/documentaries',
-    component: LibraryList,
+    loadComponent: () => import('./pages/library-list/library-list').then((m) => m.LibraryList),
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
   {
     path: 'library/books/new',
-    component: ItemForm,
+    loadComponent: () => import('./pages/item-form/item-form').then((m) => m.ItemForm),
     data: { type: 'BOOK' },
     canActivate: [authGuard],
   },
   {
     path: 'library/documentaries/new',
-    component: ItemForm,
+    loadComponent: () => import('./pages/item-form/item-form').then((m) => m.ItemForm),
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
   {
     path: 'library/books/:id/edit',
-    component: ItemForm,
+    loadComponent: () => import('./pages/item-form/item-form').then((m) => m.ItemForm),
     data: { type: 'BOOK' },
     canActivate: [authGuard],
   },
   {
     path: 'library/documentaries/:id/edit',
-    component: ItemForm,
+    loadComponent: () => import('./pages/item-form/item-form').then((m) => m.ItemForm),
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
   {
     path: 'library/books/:id',
-    component: ItemDetail,
+    loadComponent: () => import('./pages/item-detail/item-detail').then((m) => m.ItemDetail),
     data: { type: 'BOOK' },
     canActivate: [authGuard],
   },
   {
     path: 'library/documentaries/:id',
-    component: ItemDetail,
+    loadComponent: () => import('./pages/item-detail/item-detail').then((m) => m.ItemDetail),
     data: { type: 'DOCUMENTARY' },
     canActivate: [authGuard],
   },
-  { path: 'calendar', component: Calendar, canActivate: [authGuard] },
-  { path: 'to-read', component: ToRead, canActivate: [authGuard] },
-  { path: 'privacy', component: Privacy },
-  { path: 'terms', component: Terms },
+  { path: 'calendar', loadComponent: () => import('./pages/calendar/calendar').then((m) => m.Calendar), canActivate: [authGuard] },
+  { path: 'to-read', loadComponent: () => import('./pages/to-read/to-read').then((m) => m.ToRead), canActivate: [authGuard] },
+  { path: 'privacy', loadComponent: () => import('./pages/privacy/privacy').then((m) => m.Privacy) },
+  { path: 'terms', loadComponent: () => import('./pages/terms/terms').then((m) => m.Terms) },
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' },
 ];
