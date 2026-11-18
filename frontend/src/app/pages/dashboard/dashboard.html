@@ -1,9 +1,24 @@
 <main class="dashboard">
   <h1>Dashboard</h1>
 
+  @if (!items.isLoading() && !items.error() && data().length === 0) {
+    <section class="panel">
+      <h2>Welkom</h2>
+      <p>Je bibliotheek is nog leeg. Begin met je eerste item:</p>
+      <p>
+        <a routerLink="/library/books/new">Boek toevoegen</a> ·
+        <a routerLink="/library/documentaries/new">Documentaire toevoegen</a>
+      </p>
+    </section>
+  }
+
   <section class="panel">
     <h2>Jaardoel {{ currentYear }}</h2>
-    <p>{{ yearCount() }} van {{ goal }} boeken</p>
+    <p>
+      {{ yearCount() }} van
+      <input type="number" min="1" [value]="goal()" (change)="setGoal($event)" aria-label="Jaardoel" />
+      boeken
+    </p>
     <div class="bar-track"><div class="bar-fill" [style.width.%]="goalPercent()"></div></div>
   </section>
 
@@ -75,6 +90,12 @@
       </ul>
     </details>
   }
+
+  <section class="panel">
+    <h2>Exporteren</h2>
+    <button type="button" (click)="exportCsv()" [disabled]="data().length === 0">CSV</button>
+    <button type="button" (click)="exportJson()" [disabled]="data().length === 0">JSON</button>
+  </section>
 
   <app-library-list type="BOOK" />
   <app-library-list type="DOCUMENTARY" />
