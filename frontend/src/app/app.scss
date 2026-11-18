@@ -1,7 +1,22 @@
-:host {
+.shell {
+  min-height: 100vh;
+  background: var(--mat-sys-surface);
+}
+
+.nav {
+  width: 260px;
+  background: var(--mat-sys-surface-container);
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.content {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+.active {
+  background: var(--mat-sys-outline-variant);
 }
 
 .footer {

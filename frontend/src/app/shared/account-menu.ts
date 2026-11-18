@@ -1,5 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, computed, inject, output, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,25 +10,18 @@ import { ConfirmDialog } from './confirm-dialog';
 
 @Component({
   selector: 'app-account-menu',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, RouterLink],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule],
   template: `
     @if (user()) {
       <header class="account">
         <button
           mat-icon-button
           class="account__nav"
-          [matMenuTriggerFor]="nav"
+          (click)="menuToggle.emit()"
           aria-label="Navigatiemenu"
         >
           <mat-icon>menu</mat-icon>
         </button>
-        <mat-menu #nav="matMenu" xPosition="after">
-          <a mat-menu-item routerLink="/dashboard"><mat-icon>dashboard</mat-icon>Dashboard</a>
-          <a mat-menu-item routerLink="/calendar"><mat-icon>calendar_month</mat-icon>Kalender</a>
-          <a mat-menu-item routerLink="/to-read">
-            <mat-icon>bookmark</mat-icon>Te lezen / bekijken
-          </a>
-        </mat-menu>
         <button mat-button [matMenuTriggerFor]="menu" aria-label="Accountmenu">
           @if (avatarUrl()) {
             <img class="account__avatar" [src]="avatarUrl()" alt="" referrerpolicy="no-referrer" />
@@ -91,6 +84,7 @@ import { ConfirmDialog } from './confirm-dialog';
   `,
 })
 export class AccountMenu {
+  readonly menuToggle = output<void>();
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
