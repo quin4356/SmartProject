@@ -41,10 +41,25 @@ export function topCategory(category: string | null): string {
   return category?.split('/')[0].trim() || 'Onbekend';
 }
 
+/** Lokale datum als YYYY-MM-DD. */
+export function toIsoDate(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 
 export function todayIso(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return toIsoDate(new Date());
+}
+
+/** Basisroute van een type, bv. /library/books. */
+export function itemRoute(type: ItemType): string {
+  return type === 'BOOK' ? '/library/books' : '/library/documentaries';
+}
+
+export function statusOptions(type: ItemType): { value: ItemStatus; label: string }[] {
+  return (Object.keys(STATUS_LABELS[type]) as ItemStatus[]).map((value) => ({
+    value,
+    label: STATUS_LABELS[type][value],
+  }));
 }
 
 /** Automatische datums bij een statuswijziging (old = null bij een nieuw item). */

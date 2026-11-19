@@ -102,16 +102,21 @@ export class AccountMenu {
   });
 
   protected async signOut(): Promise<void> {
-    await this.auth.signOut();
-    await this.router.navigate(['/login']);
+    this.errorMessage.set(null);
+    try {
+      await this.auth.signOut();
+      await this.router.navigate(['/login']);
+    } catch {
+      this.errorMessage.set('Uitloggen is mislukt. Probeer het opnieuw.');
+    }
   }
 
   protected async deleteAccount(): Promise<void> {
     this.errorMessage.set(null);
     const dialogRef = this.dialog.open(ConfirmDialog, {
       data: {
-        title: 'Delete account',
-        message: 'Delete your account and all your data? This action cannot be undone.',
+        title: 'Account verwijderen',
+        message: 'Je account en al je gegevens verwijderen? Dit kan niet ongedaan worden gemaakt.',
       },
     });
     if (!(await firstValueFrom(dialogRef.afterClosed()))) {

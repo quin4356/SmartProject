@@ -34,11 +34,17 @@ Deno.serve(async (req) => {
   const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
   // Storage files do not cascade, so remove the user's PDFs first.
-  const { data: files, error: listError } = await admin.storage.from(BUCKET).list(userId);
-  if (listError) {
-    return json({ error: 'Could not list files' }, 500);
-  }
-  if (files && files.length > 0) {
+  // list() returns at most `limit` files, so repeat until the folder is empty.
+  while (true) {
+    const { data: files, error: listError } = await admin.storage
+      .from(BUCKET)
+      .list(userId, { limit: 1000 });
+    if (listError) {
+      return json({ error: 'Could not list files' }, 500);
+    }
+    if (!files || files.length === 0) {
+      break;
+    }
     const paths = files.map((file) => `${userId}/${file.name}`);
     const { error: removeError } = await admin.storage.from(BUCKET).remove(paths);
     if (removeError) {

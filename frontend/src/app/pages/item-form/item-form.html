@@ -39,7 +39,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>{{ creatorLabel() }}</mat-label>
-      <input matInput formControlName="creatorName" maxlength="255" required />
+      <input matInput formControlName="creatorName" maxlength="200" required />
       @if (form.controls.creatorName.hasError('required')) {
         <mat-error>{{ creatorLabel() }} is verplicht.</mat-error>
       }

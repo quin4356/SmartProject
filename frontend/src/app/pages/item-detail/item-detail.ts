@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LibraryItems } from '../../core/library-items';
-import { ItemType, STATUS_LABELS } from '../../core/models';
+import { ItemType, STATUS_LABELS, itemRoute } from '../../core/models';
 
 @Component({
   selector: 'app-item-detail',
@@ -58,9 +58,5 @@ export class ItemDetail {
     return i ? STATUS_LABELS[i.type][i.status] : '';
   });
 
-  protected readonly editRoute = computed(() => [
-    this.type() === 'BOOK' ? '/library/books' : '/library/documentaries',
-    this.id(),
-    'edit',
-  ]);
+  protected readonly editRoute = computed(() => [itemRoute(this.type()), this.id(), 'edit']);
 }

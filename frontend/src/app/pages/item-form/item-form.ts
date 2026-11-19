@@ -17,13 +17,22 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatOptionSelectionChange, provideNativeDateAdapter } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ItemStatus, ItemType, LibraryItem, NewLibraryItem, STATUS_LABELS, datesForStatus } from '../../core/models';
+import {
+  ItemStatus,
+  ItemType,
+  LibraryItem,
+  NewLibraryItem,
+  datesForStatus,
+  statusOptions,
+  toIsoDate,
+} from '../../core/models';
 import { LibraryItems } from '../../core/library-items';
 import { BookSearch, BookSuggestion } from '../../core/book-search';
 import { DocumentarySearch } from '../../core/documentary-search';
 import { ItemExtrasPanel } from '../../shared/item-extras';
 
 const MAX_TEXT_LENGTH = 255;
+const MAX_CREATOR_LENGTH = 200; // database: creator_name tot 200 tekens
 const MAX_DESCRIPTION_LENGTH = 5000;
 
 function endDateAfterStartDate(group: AbstractControl): ValidationErrors | null {
@@ -33,16 +42,6 @@ function endDateAfterStartDate(group: AbstractControl): ValidationErrors | null 
     return { endBeforeStart: true };
   }
   return null;
-}
-
-function toIsoDate(date: Date | null): string | null {
-  if (!date) {
-    return null;
-  }
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
 }
 
 @Component({
@@ -86,12 +85,7 @@ export class ItemForm implements OnInit {
     return `${noun} ${this.editing() ? 'bewerken' : 'toevoegen'}`;
   });
   readonly creatorLabel = computed(() => (this.isBook() ? 'Auteur' : 'Maker'));
-  readonly statusOptions = computed(() =>
-    (Object.keys(STATUS_LABELS[this.type()]) as ItemStatus[]).map((value) => ({
-      value,
-      label: STATUS_LABELS[this.type()][value],
-    })),
-  );
+  readonly statusOptions = computed(() => statusOptions(this.type()));
   readonly listRoute = '/dashboard';
 
   async ngOnInit(): Promise<void> {
@@ -114,11 +108,8 @@ export class ItemForm implements OnInit {
         description: item.description ?? '',
       });
       this.form.controls.status.valueChanges.subscribe((status) => {
-        const dates = datesForStatus(
-          this.loaded?.status ?? null,
-          status,
-          toIsoDate(this.form.controls.startDate.value),
-        );
+        const start = this.form.controls.startDate.value;
+        const dates = datesForStatus(this.loaded?.status ?? null, status, start && toIsoDate(start));
         this.form.patchValue({
           startDate: this.fromIsoDate(dates.start_date),
           endDate: this.fromIsoDate(dates.end_date),
@@ -142,7 +133,7 @@ export class ItemForm implements OnInit {
   readonly form = this.fb.nonNullable.group(
     {
       title: ['', [Validators.required, Validators.maxLength(MAX_TEXT_LENGTH)]],
-      creatorName: ['', [Validators.required, Validators.maxLength(MAX_TEXT_LENGTH)]],
+      creatorName: ['', [Validators.required, Validators.maxLength(MAX_CREATOR_LENGTH)]],
       status: ['TO_DO' as ItemStatus, Validators.required],
       startDate: [null as Date | null],
       endDate: [null as Date | null],
@@ -191,7 +182,10 @@ export class ItemForm implements OnInit {
       creator_name: value.creatorName.trim(),
       status: value.status,
       ...(this.editing()
-        ? { start_date: toIsoDate(value.startDate), end_date: toIsoDate(value.endDate) }
+        ? {
+            start_date: value.startDate && toIsoDate(value.startDate),
+            end_date: value.endDate && toIsoDate(value.endDate),
+          }
         : datesForStatus(null, value.status, null)),
       rating: value.rating,
       description: value.description.trim() || null,
@@ -231,7 +225,7 @@ export class ItemForm implements OnInit {
     this.pageCount = book.pageCount ?? null;
     this.form.patchValue({
       creatorName: book.authors.length
-        ? book.authors.join(', ').slice(0, MAX_TEXT_LENGTH)
+        ? book.authors.join(', ').slice(0, MAX_CREATOR_LENGTH)
         : this.form.controls.creatorName.value,
       description: book.description.replace(/<[^>]*>/g, '').slice(0, MAX_DESCRIPTION_LENGTH),
     });

@@ -2,7 +2,7 @@ import { Component, computed, inject, resource, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LibraryItems } from '../../core/library-items';
-import { ItemType } from '../../core/models';
+import { ItemType, itemRoute } from '../../core/models';
 import { categoryColor, categoryLabel } from '../../core/category-colors';
 
 @Component({
@@ -44,6 +44,6 @@ export class ToRead {
   }
 
   protected editLink(type: ItemType, id: string): string[] {
-    return [type === 'BOOK' ? '/library/books' : '/library/documentaries', id, 'edit'];
+    return [itemRoute(type), id, 'edit'];
   }
 }

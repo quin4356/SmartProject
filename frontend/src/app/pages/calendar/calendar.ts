@@ -1,7 +1,7 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LibraryItems } from '../../core/library-items';
-import { LibraryItem, todayIso } from '../../core/models';
+import { LibraryItem, toIsoDate as toIso, todayIso } from '../../core/models';
 import { categoryColor, categoryLabel } from '../../core/category-colors';
 
 const WINDOW_DAYS = 90;
@@ -23,8 +23,6 @@ interface PlacedBar extends Bar {
   width: number;
 }
 
-const toIso = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const dayNumber = (iso: string) => Date.parse(iso) / DAY_MS;
 
 @Component({
