@@ -1,0 +1,53 @@
+<main class="page detail">
+  @if (item.isLoading()) {
+    <div class="detail__grid" aria-busy="true" aria-label="Laden">
+      <div class="skeleton" style="aspect-ratio: 2 / 3"></div>
+      <div>
+        <div class="skeleton" style="height: 1rem; width: 30%"></div>
+        <div class="skeleton" style="height: 4rem; margin: 1rem 0"></div>
+        <div class="skeleton" style="height: 8rem"></div>
+      </div>
+    </div>
+  } @else if (item.value(); as i) {
+    <div class="detail__grid">
+      <div class="detail__cover rise" [style.--c]="color(i)">
+        @if (i.cover_url) {
+          <img [src]="i.cover_url" [alt]="'Omslag van ' + i.title" />
+        } @else {
+          <span>{{ i.title }}</span>
+        }
+      </div>
+
+      <div class="detail__text">
+        <p class="eyebrow rise">{{ statusLabel() }}</p>
+        <h1 class="rise">{{ i.title }}</h1>
+        <p class="detail__creator rise">{{ i.creator_name }}</p>
+
+        <dl class="facts rise">
+          @if (i.rating) {
+            <div><dt>Beoordeling</dt><dd class="num">{{ i.rating }} / 5</dd></div>
+          }
+          @if (i.category) {
+            <div><dt>Categorie</dt><dd>{{ i.category }}</dd></div>
+          }
+          @if (i.page_count) {
+            <div><dt>Pagina's</dt><dd class="num">{{ i.page_count }}</dd></div>
+          }
+          @if (i.start_date) {
+            <div><dt>Gestart</dt><dd class="num">{{ i.start_date }}</dd></div>
+          }
+          @if (i.end_date) {
+            <div><dt>Afgerond</dt><dd class="num">{{ i.end_date }}</dd></div>
+          }
+        </dl>
+
+        @if (i.description) {
+          <p class="detail__desc rise">{{ i.description }}</p>
+        }
+        <a class="pill pill--lamp rise" [routerLink]="editRoute()">Bewerken</a>
+      </div>
+    </div>
+  } @else {
+    <p class="empty">Item niet gevonden.</p>
+  }
+</main>

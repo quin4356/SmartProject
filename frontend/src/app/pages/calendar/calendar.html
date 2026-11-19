@@ -1,21 +1,22 @@
-<main class="calendar">
+<main class="page calendar">
   <header class="header">
-    <h1>Kalender</h1>
+    <p class="eyebrow rise">Tijdlijn</p>
+    <h1 class="rise">Wanneer je <em>wat</em> las.</h1>
   </header>
 
-  <div class="nav">
-    <button type="button" (click)="shiftBack()" aria-label="Eerder">‹</button>
-    <button type="button" (click)="reset()">Vandaag</button>
-    <button type="button" (click)="shiftForward()" aria-label="Later">›</button>
-    <span class="range">{{ rangeLabel() }}</span>
+  <div class="nav glass">
+    <button type="button" class="btn-ghost" (click)="shiftBack()" aria-label="Eerder">‹</button>
+    <button type="button" class="btn-ghost" (click)="reset()">Vandaag</button>
+    <button type="button" class="btn-ghost" (click)="shiftForward()" aria-label="Later">›</button>
+    <span class="range num">{{ rangeLabel() }}</span>
   </div>
 
   @if (items.isLoading()) {
-    <mat-spinner diameter="32" />
+    <div class="skeleton" style="height: 240px"></div>
   } @else if (items.error()) {
-    <p>Laden is mislukt. Probeer het opnieuw.</p>
+    <p class="empty">Laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.</p>
   } @else {
-    <div class="timeline">
+    <div class="timeline panel">
       <div class="axis">
         @for (t of ticks(); track t.left) {
           <span class="tick" [style.left.%]="t.left">{{ t.label }}</span>
@@ -36,7 +37,7 @@
         @for (row of rows(); track $index) {
           <div class="row">
             @for (bar of row; track bar.item.id) {
-              <div class="bar" [style.left.%]="bar.left" [style.width.%]="bar.width" [title]="bar.item.title">
+              <div class="bar" [style.--d]="$index" [style.left.%]="bar.left" [style.width.%]="bar.width" [title]="bar.item.title">
                 <span class="fill" [style.background]="color(bar.item)"></span>
                 <span class="label">
                   {{ bar.item.title }}
@@ -46,7 +47,7 @@
             }
           </div>
         } @empty {
-          <p class="empty">Niets in deze periode.</p>
+          <p class="none">Niets in deze periode.</p>
         }
       </div>
     </div>

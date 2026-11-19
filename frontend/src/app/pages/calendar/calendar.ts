@@ -1,5 +1,4 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LibraryItems } from '../../core/library-items';
 import { LibraryItem, toIsoDate as toIso, todayIso } from '../../core/models';
 import { categoryColor, categoryLabel } from '../../core/category-colors';
@@ -27,7 +26,7 @@ const dayNumber = (iso: string) => Date.parse(iso) / DAY_MS;
 
 @Component({
   selector: 'app-calendar',
-  imports: [MatProgressSpinnerModule],
+  imports: [],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss',
 })

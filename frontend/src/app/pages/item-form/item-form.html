@@ -1,5 +1,7 @@
-<main class="item-form">
-  <h1>{{ heading() }}</h1>
+<main class="page item-form">
+  <p class="eyebrow rise">{{ isBook() ? 'Boek' : 'Documentaire' }} · {{ editing() ? 'bewerken' : 'nieuw' }}</p>
+  <h1 class="rise">{{ heading() }}</h1>
+  <div class="sheet panel rise">
 
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <mat-form-field appearance="outline" class="full">
@@ -106,6 +108,8 @@
       </button>
     </div>
   </form>
+
+  </div>
 
   @if (id(); as itemId) {
     <app-item-extras [itemId]="itemId" [itemTitle]="form.controls.title.value" [type]="type()" />
