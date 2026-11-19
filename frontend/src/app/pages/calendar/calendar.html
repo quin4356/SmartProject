@@ -37,7 +37,13 @@
         @for (row of rows(); track $index) {
           <div class="row">
             @for (bar of row; track bar.item.id) {
-              <div class="bar" [style.--d]="$index" [style.left.%]="bar.left" [style.width.%]="bar.width" [title]="bar.item.title">
+              <div
+                class="bar"
+                [style.--d]="$index"
+                [style.left.%]="bar.left"
+                [style.width.%]="bar.width"
+                [title]="bar.item.title"
+              >
                 <span class="fill" [style.background]="color(bar.item)"></span>
                 <span class="label">
                   {{ bar.item.title }}

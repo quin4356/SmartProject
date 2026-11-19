@@ -5,7 +5,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
 import { LibraryItems } from '../../core/library-items';
-import { ItemStatus, ItemType, STATUS_LABELS, itemRoute, statusOptions, topCategory } from '../../core/models';
+import {
+  ItemStatus,
+  ItemType,
+  STATUS_LABELS,
+  itemRoute,
+  statusOptions,
+  topCategory,
+} from '../../core/models';
 import { SortKey, filterItems } from '../../core/list-filter';
 import { ConfirmDialog } from '../../shared/confirm-dialog';
 import { Tilt } from '../../shared/tilt';
@@ -69,7 +76,10 @@ export class LibraryList {
 
   protected async deleteItem(id: string): Promise<void> {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      data: { title: 'Item verwijderen', message: 'Dit item verwijderen? Dit kan niet ongedaan worden gemaakt.' },
+      data: {
+        title: 'Item verwijderen',
+        message: 'Dit item verwijderen? Dit kan niet ongedaan worden gemaakt.',
+      },
     });
     const confirmed = await firstValueFrom(dialogRef.afterClosed());
     if (!confirmed) {
@@ -82,7 +92,9 @@ export class LibraryList {
       this.items.reload();
     } catch (err) {
       console.error('Delete failed:', err);
-      this.snackBar.open('Verwijderen mislukt. Probeer het opnieuw.', 'Sluiten', { duration: 5000 });
+      this.snackBar.open('Verwijderen mislukt. Probeer het opnieuw.', 'Sluiten', {
+        duration: 5000,
+      });
     } finally {
       this.deleting.set({ ...this.deleting(), [id]: false });
     }

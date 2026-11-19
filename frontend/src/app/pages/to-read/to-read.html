@@ -42,7 +42,11 @@
     <ol class="list">
       @for (item of filtered(); track item.id; let i = $index) {
         <li class="row reveal" [style.--c]="color(item)">
-          <a class="row__link" [routerLink]="editLink(item.type, item.id)" [attr.aria-label]="'Bewerk ' + item.title">
+          <a
+            class="row__link"
+            [routerLink]="editLink(item.type, item.id)"
+            [attr.aria-label]="'Bewerk ' + item.title"
+          >
             <span class="row__index num">{{ (i + 1).toString().padStart(2, '0') }}</span>
             @if (item.cover_url) {
               <img class="row__cover" [src]="item.cover_url" alt="" loading="lazy" />

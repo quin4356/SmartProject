@@ -2,7 +2,8 @@
   <header class="intro">
     <p class="eyebrow rise">{{ today }}</p>
     <h1 class="rise">
-      {{ greeting }}@if (firstName()) {<span>, <em>{{ firstName() }}</em></span>}.
+      {{ greeting }}<em>{{ nameSuffix() }}</em
+      >.
     </h1>
     <p class="lede rise">
       @if (items.isLoading()) {
@@ -87,7 +88,12 @@
             }
           </p>
         </div>
-        <svg class="ring" viewBox="0 0 120 120" role="img" [attr.aria-label]="(goalPercent() | number: '1.0-0') + '% van je jaardoel'">
+        <svg
+          class="ring"
+          viewBox="0 0 120 120"
+          role="img"
+          [attr.aria-label]="(goalPercent() | number: '1.0-0') + '% van je jaardoel'"
+        >
           <circle cx="60" cy="60" r="52" pathLength="100" class="ring__track" />
           <circle
             cx="60"
@@ -97,7 +103,9 @@
             class="ring__fill"
             [style.stroke-dasharray]="goalPercent() + ' 100'"
           />
-          <text x="60" y="66" text-anchor="middle" class="num">{{ goalPercent() | number: '1.0-0' }}%</text>
+          <text x="60" y="66" text-anchor="middle" class="num">
+            {{ goalPercent() | number: '1.0-0' }}%
+          </text>
         </svg>
       </section>
 
@@ -115,7 +123,9 @@
       <section class="panel tile stat reveal">
         <p class="eyebrow">Totaal uitgelezen</p>
         <p class="stat__value num">{{ totalRead() }}</p>
-        <p class="muted"><span class="num">{{ totalPages() | number }}</span> pagina's gelezen</p>
+        <p class="muted">
+          <span class="num">{{ totalPages() | number }}</span> pagina's gelezen
+        </p>
       </section>
 
       <section class="panel tile tile--wide reveal">
@@ -131,7 +141,11 @@
           @for (n of perMonth(); track $index) {
             <div class="month" [class.is-empty]="!n">
               <span class="month__n num">{{ n || '' }}</span>
-              <div class="column" [style.height.%]="(n / maxMonth()) * 100" [style.--i]="$index"></div>
+              <div
+                class="column"
+                [style.height.%]="(n / maxMonth()) * 100"
+                [style.--i]="$index"
+              ></div>
               <span class="month__label">{{ months[$index] }}</span>
             </div>
           }
@@ -144,7 +158,9 @@
           <p class="muted">Nog geen gelezen boeken.</p>
         } @else {
           <table>
-            <caption class="sr-only">Gelezen boeken per categorie</caption>
+            <caption class="sr-only">
+              Gelezen boeken per categorie
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Categorie</th>
@@ -158,11 +174,15 @@
                 <tr [style.--c]="color({ type: 'BOOK', category: c.category })">
                   <td><span class="dot"></span>{{ c.category }}</td>
                   <td class="bar-cell">
-                    <div class="bar-track"><div class="bar-fill" [style.width.%]="(c.books / maxBooks()) * 100"></div></div>
+                    <div class="bar-track">
+                      <div class="bar-fill" [style.width.%]="(c.books / maxBooks()) * 100"></div>
+                    </div>
                     <span class="num">{{ c.books }}</span>
                   </td>
                   <td class="num num-col">{{ c.pages | number }}</td>
-                  <td class="num num-col">{{ c.avgRating === null ? '–' : (c.avgRating | number: '1.1-1') }}</td>
+                  <td class="num num-col">
+                    {{ c.avgRating === null ? '–' : (c.avgRating | number: '1.1-1') }}
+                  </td>
                 </tr>
               }
             </tbody>
@@ -190,8 +210,22 @@
         <h2>Exporteren</h2>
         <p class="muted">Neem je bibliotheek mee, waar je maar wilt.</p>
         <div class="export__buttons">
-          <button type="button" class="btn-ghost" (click)="exportCsv()" [disabled]="data().length === 0">CSV</button>
-          <button type="button" class="btn-ghost" (click)="exportJson()" [disabled]="data().length === 0">JSON</button>
+          <button
+            type="button"
+            class="btn-ghost"
+            (click)="exportCsv()"
+            [disabled]="data().length === 0"
+          >
+            CSV
+          </button>
+          <button
+            type="button"
+            class="btn-ghost"
+            (click)="exportJson()"
+            [disabled]="data().length === 0"
+          >
+            JSON
+          </button>
         </div>
       </section>
     </div>

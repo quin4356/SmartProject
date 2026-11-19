@@ -25,19 +25,34 @@
 
         <dl class="facts rise">
           @if (i.rating) {
-            <div><dt>Beoordeling</dt><dd class="num">{{ i.rating }} / 5</dd></div>
+            <div>
+              <dt>Beoordeling</dt>
+              <dd class="num">{{ i.rating }} / 5</dd>
+            </div>
           }
           @if (i.category) {
-            <div><dt>Categorie</dt><dd>{{ i.category }}</dd></div>
+            <div>
+              <dt>Categorie</dt>
+              <dd>{{ i.category }}</dd>
+            </div>
           }
           @if (i.page_count) {
-            <div><dt>Pagina's</dt><dd class="num">{{ i.page_count }}</dd></div>
+            <div>
+              <dt>Pagina's</dt>
+              <dd class="num">{{ i.page_count }}</dd>
+            </div>
           }
           @if (i.start_date) {
-            <div><dt>Gestart</dt><dd class="num">{{ i.start_date }}</dd></div>
+            <div>
+              <dt>Gestart</dt>
+              <dd class="num">{{ i.start_date }}</dd>
+            </div>
           }
           @if (i.end_date) {
-            <div><dt>Afgerond</dt><dd class="num">{{ i.end_date }}</dd></div>
+            <div>
+              <dt>Afgerond</dt>
+              <dd class="num">{{ i.end_date }}</dd>
+            </div>
           }
         </dl>
 

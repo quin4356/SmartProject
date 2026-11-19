@@ -45,7 +45,11 @@ export class Calendar {
 
   protected readonly rangeLabel = computed(() => {
     const fmt = (iso: string) =>
-      new Date(iso).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' });
+      new Date(iso).toLocaleDateString('nl-NL', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
     return `${fmt(this.windowStart())} – ${fmt(this.windowEnd())}`;
   });
 
@@ -131,9 +135,7 @@ export class Calendar {
   protected readonly color = categoryColor;
 
   protected shift(days: number): void {
-    this.windowStart.set(
-      toIso(new Date(Date.parse(this.windowStart()) + days * DAY_MS)),
-    );
+    this.windowStart.set(toIso(new Date(Date.parse(this.windowStart()) + days * DAY_MS)));
   }
 
   protected shiftBack(): void {

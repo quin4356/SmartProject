@@ -144,7 +144,13 @@
   justify-content: center;
   border-radius: 4px 4px 2px 2px;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent 18%, transparent 80%, rgba(0, 0, 0, 0.45)),
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.35),
+      transparent 18%,
+      transparent 80%,
+      rgba(0, 0, 0, 0.45)
+    ),
     linear-gradient(180deg, hsl(var(--hue) 32% 42%), hsl(var(--hue) 30% 24%));
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.06),

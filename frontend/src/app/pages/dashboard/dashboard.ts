@@ -62,18 +62,24 @@ export class Dashboard {
   );
 
   protected readonly categories = computed(() => categoryStats(this.data()));
-  protected readonly maxBooks = computed(() => Math.max(1, ...this.categories().map((c) => c.books)));
+  protected readonly maxBooks = computed(() =>
+    Math.max(1, ...this.categories().map((c) => c.books)),
+  );
   protected readonly perMonth = computed(() => booksPerMonth(this.data(), this.selectedYear()));
   protected readonly maxMonth = computed(() => Math.max(1, ...this.perMonth()));
   protected readonly yearCount = computed(() => booksInYear(this.data(), this.currentYear));
-  protected readonly goalPercent = computed(() => Math.min(100, (this.yearCount() / this.goal()) * 100));
+  protected readonly goalPercent = computed(() =>
+    Math.min(100, (this.yearCount() / this.goal()) * 100),
+  );
   protected readonly pace = computed(() => pagesPerDay(this.data()));
   protected readonly authors = computed(() => authorCounts(this.data()).slice(0, 6));
 
   protected readonly firstName = computed(
-    () => ((this.auth.user()?.user_metadata?.['full_name'] as string | undefined) ?? '').split(' ')[0],
+    () =>
+      ((this.auth.user()?.user_metadata?.['full_name'] as string | undefined) ?? '').split(' ')[0],
   );
   protected readonly greeting = greeting(new Date().getHours());
+  protected readonly nameSuffix = computed(() => (this.firstName() ? `, ${this.firstName()}` : ''));
   protected readonly today = new Date().toLocaleDateString('nl-NL', {
     weekday: 'long',
     day: 'numeric',
@@ -85,8 +91,12 @@ export class Dashboard {
     const busy = this.data().filter((i) => i.status === 'IN_PROGRESS');
     return busy.length ? busy : this.data().slice(0, 8);
   });
-  protected readonly shelfIsBusy = computed(() => this.data().some((i) => i.status === 'IN_PROGRESS'));
-  protected readonly totalRead = computed(() => this.data().filter((i) => i.status === 'DONE').length);
+  protected readonly shelfIsBusy = computed(() =>
+    this.data().some((i) => i.status === 'IN_PROGRESS'),
+  );
+  protected readonly totalRead = computed(
+    () => this.data().filter((i) => i.status === 'DONE').length,
+  );
   protected readonly totalPages = computed(() =>
     this.data()
       .filter((i) => i.type === 'BOOK' && i.status === 'DONE')
