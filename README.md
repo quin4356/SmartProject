@@ -67,3 +67,13 @@ The app runs on http://localhost:4200 and talks to the hosted Supabase project. 
 
 ## Deploy
 `cd frontend && npm run build` — output in `frontend/dist/`.
+
+### Met Docker
+De `Dockerfile` bouwt de app en serveert ze met nginx.
+
+```bash
+docker build -t smartproject .
+docker run -d -p 8080:80 --name smartproject smartproject
+```
+
+De app draait dan op http://localhost:8080. Zet dat adres (of je eigen domein) in Supabase onder Authentication → URL Configuration, anders werkt de Google-login niet.
