@@ -1,50 +1,63 @@
-<main class="to-read">
+<main class="page to-read">
   <header class="header">
-    <h1>Te lezen / bekijken</h1>
+    <p class="eyebrow rise">Leeslijst</p>
+    <h1 class="rise">Wat nog <em>wacht.</em></h1>
+    @if (!items.isLoading() && !items.error()) {
+      <p class="lede rise">
+        <span class="num">{{ filtered().length }}</span>
+        {{ filtered().length === 1 ? 'titel staat' : 'titels staan' }} klaar om aan te beginnen.
+      </p>
+    }
   </header>
 
   <div class="filters">
-    <label>
-      Soort
-      <select (change)="setType($event)">
-        <option value="">Alles</option>
-        <option value="BOOK">Boeken</option>
-        <option value="DOCUMENTARY">Documentaires</option>
-      </select>
-    </label>
-    <label>
-      Categorie
-      <select (change)="setCategory($event)">
-        <option value="">Alle</option>
-        @for (c of categories(); track c) {
-          <option [value]="c">{{ c }}</option>
-        }
-      </select>
-    </label>
+    <select aria-label="Soort" (change)="setType($event)">
+      <option value="">Boeken en documentaires</option>
+      <option value="BOOK">Alleen boeken</option>
+      <option value="DOCUMENTARY">Alleen documentaires</option>
+    </select>
+    <select aria-label="Categorie" (change)="setCategory($event)">
+      <option value="">Alle categorieën</option>
+      @for (c of categories(); track c) {
+        <option [value]="c">{{ c }}</option>
+      }
+    </select>
   </div>
 
   @if (items.isLoading()) {
-    <mat-spinner diameter="32" />
+    <div class="list" aria-busy="true" aria-label="Laden">
+      @for (n of [1, 2, 3, 4]; track n) {
+        <div class="skeleton" style="height: 96px; margin-bottom: 0.75rem"></div>
+      }
+    </div>
   } @else if (items.error()) {
-    <p>Laden is mislukt. Probeer het opnieuw.</p>
+    <p class="empty">Laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.</p>
   } @else if (filtered().length === 0) {
-    <p>Niets openstaand.</p>
+    <div class="empty">
+      <h2>Niets openstaand</h2>
+      <p>Alles gelezen en bekeken. Tijd voor iets nieuws?</p>
+      <a class="pill pill--lamp" routerLink="/library/books/new">+ Boek toevoegen</a>
+    </div>
   } @else {
-    <ul class="list">
-      @for (item of filtered(); track item.id) {
-        <li [style.border-left-color]="color(item)">
-          @if (item.cover_url) {
-            <img [src]="item.cover_url" alt="" />
-          }
-          <div class="text">
-            <strong>{{ item.title }}</strong>
-            <span>{{ item.creator_name }} · {{ label(item) }}</span>
-          </div>
-          <a [routerLink]="editLink(item.type, item.id)" [attr.aria-label]="'Bewerk ' + item.title">
-            Bewerk
+    <ol class="list">
+      @for (item of filtered(); track item.id; let i = $index) {
+        <li class="row reveal" [style.--c]="color(item)">
+          <a class="row__link" [routerLink]="editLink(item.type, item.id)" [attr.aria-label]="'Bewerk ' + item.title">
+            <span class="row__index num">{{ (i + 1).toString().padStart(2, '0') }}</span>
+            @if (item.cover_url) {
+              <img class="row__cover" [src]="item.cover_url" alt="" loading="lazy" />
+            } @else {
+              <span class="row__cover row__cover--blank" aria-hidden="true"></span>
+            }
+            <span class="row__text">
+              <strong>{{ item.title }}</strong>
+              <span>{{ item.creator_name }}</span>
+            </span>
+            <span class="chip">{{ label(item) }}</span>
+            <span class="row__arrow" aria-hidden="true">→</span>
           </a>
         </li>
       }
-    </ul>
+    </ol>
   }
 </main>
