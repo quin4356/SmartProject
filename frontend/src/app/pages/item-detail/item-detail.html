@@ -59,7 +59,17 @@
         @if (i.description) {
           <p class="detail__desc rise">{{ i.description }}</p>
         }
-        <a class="pill pill--lamp rise" [routerLink]="editRoute()">Bewerken</a>
+        <div class="actions rise">
+          <a class="pill pill--lamp" [routerLink]="editRoute()">Bewerken</a>
+          <button
+            type="button"
+            class="pill pill--danger"
+            (click)="remove(i.id, i.title)"
+            [disabled]="deleting()"
+          >
+            Verwijderen
+          </button>
+        </div>
       </div>
     </div>
   } @else {

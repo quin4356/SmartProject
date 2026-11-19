@@ -1,8 +1,12 @@
-import { Component, computed, inject, input, resource } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, inject, input, resource, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { firstValueFrom } from 'rxjs';
 import { LibraryItems } from '../../core/library-items';
 import { ItemType, STATUS_LABELS, itemRoute } from '../../core/models';
 import { categoryColor } from '../../core/category-colors';
+import { ConfirmDialog } from '../../shared/confirm-dialog';
 
 @Component({
   selector: 'app-item-detail',
@@ -29,4 +33,31 @@ export class ItemDetail {
   protected readonly color = categoryColor;
 
   protected readonly editRoute = computed(() => [itemRoute(this.type()), this.id(), 'edit']);
+
+  private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
+  protected readonly deleting = signal(false);
+
+  protected async remove(id: string, title: string): Promise<void> {
+    const ref = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Verwijderen',
+        message: `"${title}" verwijderen? Dit kan niet ongedaan worden gemaakt.`,
+      },
+    });
+    if (!(await firstValueFrom(ref.afterClosed()))) {
+      return;
+    }
+    this.deleting.set(true);
+    try {
+      await this.libraryItems.remove(id);
+      await this.router.navigateByUrl(itemRoute(this.type()));
+    } catch {
+      this.snackBar.open('Verwijderen mislukt. Probeer het opnieuw.', 'Sluiten', {
+        duration: 5000,
+      });
+      this.deleting.set(false);
+    }
+  }
 }

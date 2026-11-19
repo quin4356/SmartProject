@@ -80,9 +80,29 @@
   animation-delay: 0.18s;
 }
 
-.pill {
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-top: 1rem;
   animation-delay: 0.22s;
+}
+
+.pill--danger {
+  background: transparent;
+  cursor: pointer;
+  border-color: rgba(240, 138, 122, 0.5);
+  color: #f08a7a;
+
+  &:hover:not(:disabled) {
+    color: #f08a7a;
+    border-color: #f08a7a;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 }
 
 @media (max-width: 700px) {
