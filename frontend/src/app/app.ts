@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { Auth } from './core/auth';
 import { AccountMenu } from './shared/account-menu';
 
 @Component({
@@ -11,12 +12,22 @@ import { AccountMenu } from './shared/account-menu';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
+    MatButtonModule,
     MatIconModule,
-    MatListModule,
     MatSidenavModule,
     AccountMenu,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {}
+export class App {
+  protected readonly user = inject(Auth).user;
+
+  protected readonly links = [
+    { path: '/dashboard', label: 'Overzicht' },
+    { path: '/library/books', label: 'Boeken' },
+    { path: '/library/documentaries', label: 'Documentaires' },
+    { path: '/to-read', label: 'Te lezen' },
+    { path: '/calendar', label: 'Kalender' },
+  ];
+}

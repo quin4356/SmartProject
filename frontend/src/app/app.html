@@ -1,30 +1,70 @@
+<a class="skip" href="#main">Naar inhoud</a>
+
 <mat-sidenav-container class="shell">
-  <mat-sidenav #nav mode="over" class="nav">
-    <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard" routerLinkActive="active" (click)="nav.close()">
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
-      </a>
-      <a mat-list-item routerLink="/calendar" routerLinkActive="active" (click)="nav.close()">
-        <mat-icon matListItemIcon>calendar_month</mat-icon>
-        <span matListItemTitle>Kalender</span>
-      </a>
-      <a mat-list-item routerLink="/to-read" routerLinkActive="active" (click)="nav.close()">
-        <mat-icon matListItemIcon>bookmark</mat-icon>
-        <span matListItemTitle>Te lezen / bekijken</span>
-      </a>
-    </mat-nav-list>
+  <mat-sidenav #nav mode="over" position="end" class="drawer">
+    <nav class="drawer__nav" aria-label="Hoofdmenu">
+      @for (link of links; track link.path; let i = $index) {
+        <a
+          class="drawer__link"
+          [routerLink]="link.path"
+          routerLinkActive="is-active"
+          (click)="nav.close()"
+          [style.--i]="i"
+        >
+          <span class="drawer__index num">0{{ i + 1 }}</span>
+          {{ link.label }}
+        </a>
+      }
+    </nav>
   </mat-sidenav>
 
   <mat-sidenav-content class="content">
-    <app-account-menu (menuToggle)="nav.toggle()" />
-    <router-outlet />
+    @if (user()) {
+      <header class="topbar glass">
+        <a class="brand" routerLink="/dashboard" aria-label="SmartProject, naar dashboard">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span class="brand__name">Smart<em>Project</em></span>
+        </a>
+
+        <nav class="links" aria-label="Hoofdmenu">
+          @for (link of links; track link.path) {
+            <a [routerLink]="link.path" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+              {{ link.label }}
+            </a>
+          }
+        </nav>
+
+        <app-account-menu />
+
+        <button
+          mat-icon-button
+          class="burger"
+          (click)="nav.toggle()"
+          aria-label="Menu openen"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </header>
+    }
+
+    <div id="main" class="outlet">
+      <router-outlet />
+    </div>
+
     <footer class="footer">
-      © 2026 SMARTPROJECT. ALL RIGHTS RESERVED.
-      <br />
-      This product uses the TMDB API but is not endorsed or certified by TMDB.
-      <br />
-      <a routerLink="/privacy">Privacybeleid</a> · <a routerLink="/terms">Gebruiksvoorwaarden</a>
+      <div class="footer__inner">
+        <p class="footer__line">
+          Lees langzaam. <em>Onthoud meer.</em>
+        </p>
+        <div class="footer__meta">
+          <span class="num">© 2026 SmartProject</span>
+          <a routerLink="/privacy">Privacybeleid</a>
+          <a routerLink="/terms">Gebruiksvoorwaarden</a>
+        </div>
+        <p class="footer__note">
+          This product uses the TMDB API but is not endorsed or certified by TMDB.
+        </p>
+      </div>
     </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

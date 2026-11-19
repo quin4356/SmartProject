@@ -21,6 +21,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('footer')?.textContent).toContain('SMARTPROJECT');
+    expect(compiled.querySelector('footer')?.textContent).toContain('SmartProject');
   });
 });
