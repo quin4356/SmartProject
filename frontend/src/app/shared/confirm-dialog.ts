@@ -19,8 +19,8 @@ interface ConfirmDialogData {
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>{{ data.message }}</mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-stroked-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button color="warn" cdkFocusInitial (click)="onConfirm()">Delete</button>
+      <button mat-stroked-button cdkFocusInitial (click)="onCancel()">Annuleren</button>
+      <button mat-flat-button color="warn" (click)="onConfirm()">Verwijderen</button>
     </mat-dialog-actions>
   `,
   styles: [],

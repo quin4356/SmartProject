@@ -77,7 +77,7 @@ export class LibraryList {
 
   protected async deleteItem(id: string): Promise<void> {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      data: { title: 'Delete item', message: 'Delete this item? This action cannot be undone.' },
+      data: { title: 'Item verwijderen', message: 'Dit item verwijderen? Dit kan niet ongedaan worden gemaakt.' },
     });
     const confirmed = await firstValueFrom(dialogRef.afterClosed());
     if (!confirmed) {

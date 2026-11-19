@@ -24,6 +24,7 @@ import { DocumentarySearch } from '../../core/documentary-search';
 import { ItemExtrasPanel } from '../../shared/item-extras';
 
 const MAX_TEXT_LENGTH = 255;
+const MAX_CREATOR_LENGTH = 200; // database: creator_name tot 200 tekens
 const MAX_DESCRIPTION_LENGTH = 5000;
 
 function endDateAfterStartDate(group: AbstractControl): ValidationErrors | null {
@@ -142,7 +143,7 @@ export class ItemForm implements OnInit {
   readonly form = this.fb.nonNullable.group(
     {
       title: ['', [Validators.required, Validators.maxLength(MAX_TEXT_LENGTH)]],
-      creatorName: ['', [Validators.required, Validators.maxLength(MAX_TEXT_LENGTH)]],
+      creatorName: ['', [Validators.required, Validators.maxLength(MAX_CREATOR_LENGTH)]],
       status: ['TO_DO' as ItemStatus, Validators.required],
       startDate: [null as Date | null],
       endDate: [null as Date | null],
@@ -231,7 +232,7 @@ export class ItemForm implements OnInit {
     this.pageCount = book.pageCount ?? null;
     this.form.patchValue({
       creatorName: book.authors.length
-        ? book.authors.join(', ').slice(0, MAX_TEXT_LENGTH)
+        ? book.authors.join(', ').slice(0, MAX_CREATOR_LENGTH)
         : this.form.controls.creatorName.value,
       description: book.description.replace(/<[^>]*>/g, '').slice(0, MAX_DESCRIPTION_LENGTH),
     });
