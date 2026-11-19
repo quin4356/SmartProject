@@ -275,6 +275,56 @@ select:not([matNativeControl]) {
   }
 }
 
+// Pillen (links als knop)
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font: 500 0.9rem var(--font-body);
+  color: var(--paper);
+  text-decoration: none;
+  transition:
+    transform 0.3s var(--ease),
+    border-color 0.2s,
+    box-shadow 0.3s,
+    color 0.2s;
+
+  &:hover {
+    color: var(--paper);
+    border-color: var(--paper-faint);
+    transform: translateY(-2px);
+  }
+
+  &--lamp {
+    background: var(--lamp);
+    border-color: var(--lamp);
+    color: #1a1206;
+    box-shadow: 0 10px 30px -12px rgba(242, 180, 90, 0.7);
+
+    &:hover {
+      color: #1a1206;
+      border-color: var(--lamp);
+      box-shadow: 0 14px 40px -12px rgba(242, 180, 90, 0.9);
+    }
+  }
+}
+
+.muted {
+  color: var(--paper-dim);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 // Laden
 .skeleton {
   border-radius: var(--radius-sm);
