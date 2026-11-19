@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialogTitle } from '@angular/material/dialog';
-import { MatDialogContent } from '@angular/material/dialog';
-import { MatDialogActions } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 interface ConfirmDialogData {
   title: string;
@@ -13,8 +15,7 @@ interface ConfirmDialogData {
 
 @Component({
   selector: 'app-confirm-dialog',
-  standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatDialogTitle, MatDialogContent, MatDialogActions],
+  imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogActions],
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>{{ data.message }}</mat-dialog-content>
@@ -23,7 +24,6 @@ interface ConfirmDialogData {
       <button mat-flat-button color="warn" (click)="onConfirm()">Verwijderen</button>
     </mat-dialog-actions>
   `,
-  styles: [],
 })
 export class ConfirmDialog {
   readonly data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);

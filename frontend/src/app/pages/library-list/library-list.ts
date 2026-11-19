@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
 import { LibraryItems } from '../../core/library-items';
-import { ItemStatus, ItemType, STATUS_LABELS, topCategory } from '../../core/models';
+import { ItemStatus, ItemType, STATUS_LABELS, itemRoute, statusOptions, topCategory } from '../../core/models';
 import { SortKey, filterItems } from '../../core/list-filter';
 import { ConfirmDialog } from '../../shared/confirm-dialog';
 import { Component, computed, inject, input, resource, signal } from '@angular/core';
@@ -27,13 +27,9 @@ export class LibraryList {
 
   protected readonly title = computed(() => (this.type() === 'BOOK' ? 'Boeken' : 'Documentaires'));
 
-  protected readonly addRoute = computed(() =>
-    this.type() === 'BOOK' ? '/library/books/new' : '/library/documentaries/new',
-  );
+  protected readonly addRoute = computed(() => `${itemRoute(this.type())}/new`);
 
-  protected readonly editBase = computed(() =>
-    this.type() === 'BOOK' ? '/library/books' : '/library/documentaries',
-  );
+  protected readonly editBase = computed(() => itemRoute(this.type()));
 
   protected readonly items = resource({
     params: () => this.type(),
@@ -44,12 +40,7 @@ export class LibraryList {
   protected readonly statusFilter = signal<ItemStatus | ''>('');
   protected readonly sort = signal<SortKey>('newest');
 
-  protected readonly statusOptions = computed(() =>
-    (Object.keys(STATUS_LABELS[this.type()]) as ItemStatus[]).map((value) => ({
-      value,
-      label: STATUS_LABELS[this.type()][value],
-    })),
-  );
+  protected readonly statusOptions = computed(() => statusOptions(this.type()));
 
   protected readonly visible = computed(() =>
     filterItems(this.items.value() ?? [], this.query(), this.statusFilter(), this.sort()),
