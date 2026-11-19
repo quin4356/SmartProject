@@ -109,7 +109,11 @@ export class ItemForm implements OnInit {
       });
       this.form.controls.status.valueChanges.subscribe((status) => {
         const start = this.form.controls.startDate.value;
-        const dates = datesForStatus(this.loaded?.status ?? null, status, start && toIsoDate(start));
+        const dates = datesForStatus(
+          this.loaded?.status ?? null,
+          status,
+          start && toIsoDate(start),
+        );
         this.form.patchValue({
           startDate: this.fromIsoDate(dates.start_date),
           endDate: this.fromIsoDate(dates.end_date),
