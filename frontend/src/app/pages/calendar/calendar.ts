@@ -1,5 +1,4 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LibraryItems } from '../../core/library-items';
 import { LibraryItem, toIsoDate as toIso, todayIso } from '../../core/models';
 import { categoryColor, categoryLabel } from '../../core/category-colors';
@@ -27,7 +26,7 @@ const dayNumber = (iso: string) => Date.parse(iso) / DAY_MS;
 
 @Component({
   selector: 'app-calendar',
-  imports: [MatProgressSpinnerModule],
+  imports: [],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss',
 })
@@ -46,7 +45,11 @@ export class Calendar {
 
   protected readonly rangeLabel = computed(() => {
     const fmt = (iso: string) =>
-      new Date(iso).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' });
+      new Date(iso).toLocaleDateString('nl-NL', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
     return `${fmt(this.windowStart())} – ${fmt(this.windowEnd())}`;
   });
 
@@ -132,9 +135,7 @@ export class Calendar {
   protected readonly color = categoryColor;
 
   protected shift(days: number): void {
-    this.windowStart.set(
-      toIso(new Date(Date.parse(this.windowStart()) + days * DAY_MS)),
-    );
+    this.windowStart.set(toIso(new Date(Date.parse(this.windowStart()) + days * DAY_MS)));
   }
 
   protected shiftBack(): void {

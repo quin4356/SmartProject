@@ -1,12 +1,6 @@
 .shell {
   min-height: 100vh;
-  background: var(--mat-sys-surface);
-}
-
-.nav {
-  width: 260px;
-  background: var(--mat-sys-surface-container);
-  border-right: 1px solid var(--mat-sys-outline-variant);
+  background: transparent;
 }
 
 .content {
@@ -15,19 +9,222 @@
   min-height: 100vh;
 }
 
-.active {
-  background: var(--mat-sys-outline-variant);
+.outlet {
+  flex: 1;
 }
 
-.footer {
-  max-width: 960px;
-  width: 100%;
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background: var(--lamp);
+  color: var(--ink);
+
+  &:focus {
+    top: 1rem;
+  }
+}
+
+// Zwevende topbalk
+.topbar {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: min(1200px, calc(100% - 1.5rem));
+  margin: 0.75rem auto 0;
+  padding: 0.45rem 0.6rem 0.45rem 1.1rem;
   box-sizing: border-box;
-  margin: auto auto 0;
-  padding: 1.5rem 1rem;
-  border-top: 1px solid var(--mat-sys-outline-variant);
-  color: var(--mat-sys-on-surface-variant);
-  font-family: var(--mat-sys-label-small-font);
+  border-radius: 999px;
+  box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.9);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--paper);
+
+  &__mark {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--lamp);
+    box-shadow:
+      0 0 12px var(--lamp),
+      0 0 32px rgba(242, 180, 90, 0.5);
+    transition: transform 0.4s var(--ease);
+  }
+
+  &:hover &__mark {
+    transform: scale(1.3);
+  }
+
+  &__name {
+    font: 400 1.25rem/1 var(--font-display);
+    letter-spacing: -0.01em;
+
+    em {
+      color: var(--lamp);
+    }
+  }
+}
+
+.links {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0 auto;
+
+  a {
+    position: relative;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    color: var(--paper-dim);
+    text-decoration: none;
+    transition:
+      color 0.25s,
+      background 0.25s;
+
+    // glijdende onderstreping
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0.9rem;
+      right: 0.9rem;
+      bottom: 0.3rem;
+      height: 1px;
+      background: var(--lamp);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.35s var(--ease);
+    }
+
+    &:hover {
+      color: var(--paper);
+
+      &::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+
+    &.is-active {
+      color: var(--paper);
+      background: rgba(239, 231, 214, 0.07);
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+}
+
+.burger {
+  display: none;
+}
+
+// Mobiel menu
+.drawer {
+  width: min(86vw, 360px);
+  border-left: 1px solid var(--line);
+}
+
+.drawer__nav {
+  display: flex;
+  flex-direction: column;
+  padding: 5rem 1.75rem 2rem;
+}
+
+.drawer__link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--line);
+  font: 400 1.9rem/1.1 var(--font-display);
+  color: var(--paper);
+  text-decoration: none;
+  animation: fade-up 0.5s var(--ease) backwards;
+  animation-delay: calc(var(--i) * 60ms + 120ms);
+
+  &.is-active {
+    color: var(--lamp);
+  }
+}
+
+.drawer__index {
   font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  color: var(--paper-faint);
+}
+
+@media (max-width: 860px) {
+  .links {
+    display: none;
+  }
+
+  .topbar {
+    gap: 0.25rem;
+  }
+
+  .brand {
+    margin-right: auto;
+  }
+
+  .burger {
+    display: inline-flex;
+  }
+}
+
+// Footer
+.footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--line);
+}
+
+.footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
+  box-sizing: border-box;
+}
+
+.footer__line {
+  margin: 0 0 2rem;
+  font: 300 clamp(1.8rem, 4vw, 3rem) / 1.05 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--paper);
+
+  em {
+    color: var(--lamp);
+  }
+}
+
+.footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--paper-dim);
+
+  a {
+    color: var(--paper-dim);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--lamp);
+    }
+  }
+}
+
+.footer__note {
+  margin: 1rem 0 0;
+  font-size: 0.75rem;
+  color: var(--paper-faint);
 }

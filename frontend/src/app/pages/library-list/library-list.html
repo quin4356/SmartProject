@@ -1,11 +1,27 @@
-<main class="library">
+<main class="page library">
   <header class="header">
-    <h1>{{ title() }}</h1>
-    <a mat-flat-button [routerLink]="addRoute()">Toevoegen</a>
+    <div>
+      <p class="eyebrow rise">
+        Bibliotheek
+        @if (items.value(); as all) {
+          · <span class="num">{{ all.length }}</span> {{ all.length === 1 ? 'titel' : 'titels' }}
+        }
+      </p>
+      <h1 class="rise">{{ title() }}</h1>
+    </div>
+    <a class="pill pill--lamp rise" [routerLink]="addRoute()">+ Toevoegen</a>
   </header>
 
-  <div class="filters">
-    <input type="search" placeholder="Zoeken…" aria-label="Zoeken" (input)="setQuery($event)" />
+  <div class="filters glass">
+    <label class="search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        placeholder="Zoek op titel, maker of categorie"
+        aria-label="Zoeken"
+        (input)="setQuery($event)"
+      />
+    </label>
     <select aria-label="Status" (change)="setStatus($event)">
       <option value="">Alle statussen</option>
       @for (o of statusOptions(); track o.value) {
@@ -20,40 +36,61 @@
   </div>
 
   @if (items.isLoading()) {
-    <mat-spinner diameter="32" />
+    <div class="grid" aria-busy="true" aria-label="Laden">
+      @for (n of [1, 2, 3, 4, 5, 6]; track n) {
+        <div class="skeleton" style="aspect-ratio: 2 / 3.6"></div>
+      }
+    </div>
   } @else if (items.error()) {
-    <p>Laden is mislukt. Probeer het opnieuw.</p>
+    <p class="empty">Laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.</p>
   } @else if (items.value()?.length === 0) {
-    <p>Nog niets toegevoegd.</p>
+    <div class="empty">
+      <h2>Nog niets op deze plank</h2>
+      <p>Voeg je eerste titel toe, de rest zoeken we voor je op.</p>
+      <a class="pill pill--lamp" [routerLink]="addRoute()">+ Toevoegen</a>
+    </div>
   } @else if (visible().length === 0) {
-    <p>Geen resultaten.</p>
+    <p class="empty">Geen resultaten voor deze filters.</p>
   } @else {
     <div class="grid">
       @for (item of visible(); track item.id) {
-        <mat-card>
-          <div class="item-main">
+        <article class="card" appTilt [style.--c]="color(item)" [style.--d]="$index">
+          <a
+            class="card__cover"
+            [routerLink]="[editBase(), item.id]"
+            [attr.aria-label]="item.title"
+          >
             @if (item.cover_url) {
-              <img class="item-cover" [src]="item.cover_url" [alt]="'Omslag van ' + item.title" />
+              <img [src]="item.cover_url" alt="" loading="lazy" />
+            } @else {
+              <span class="card__blank">{{ item.title }}</span>
             }
-            <div class="item-text">
-              <mat-card-header>
-                <mat-card-title>
-                  <a [routerLink]="[editBase(), item.id]">{{ item.title }}</a>
-                </mat-card-title>
-                <mat-card-subtitle>{{ item.creator_name }}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                {{ statusLabel(item.type, item.status) }}
-                @if (item.rating) {
-                  · {{ item.rating }}/5
-                }
-                @if (item.type === 'BOOK') {
-                  · <span [title]="item.category ?? ''">{{ topCategory(item.category) }}</span>
-                }
-              </mat-card-content>
-            </div>
+            <span class="card__glare" aria-hidden="true"></span>
+            <span class="badge glass">{{ statusLabel(item.type, item.status) }}</span>
+          </a>
+
+          <div class="card__body">
+            <h2 class="card__title">
+              <a [routerLink]="[editBase(), item.id]">{{ item.title }}</a>
+            </h2>
+            <p class="card__creator">{{ item.creator_name }}</p>
+            <p class="card__meta">
+              @if (item.type === 'BOOK') {
+                <span class="chip" [title]="item.category ?? ''">{{
+                  topCategory(item.category)
+                }}</span>
+              }
+              @if (item.rating) {
+                <span class="stars" [attr.aria-label]="item.rating + ' van 5'">
+                  @for (s of [1, 2, 3, 4, 5]; track s) {
+                    <i [class.on]="s <= item.rating!" aria-hidden="true"></i>
+                  }
+                </span>
+              }
+            </p>
           </div>
-          <mat-card-actions align="end">
+
+          <div class="card__actions">
             <a
               mat-icon-button
               [routerLink]="[editBase(), item.id, 'edit']"
@@ -62,16 +99,16 @@
               <mat-icon>edit</mat-icon>
             </a>
             <button
-              mat-stroked-button
-              color="warn"
+              mat-icon-button
+              class="danger"
               (click)="deleteItem(item.id)"
+              [disabled]="deleting()[item.id]"
               [attr.aria-label]="'Verwijder ' + item.title"
             >
               <mat-icon>delete</mat-icon>
-              Verwijderen
             </button>
-          </mat-card-actions>
-        </mat-card>
+          </div>
+        </article>
       }
     </div>
   }

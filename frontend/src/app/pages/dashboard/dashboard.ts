@@ -12,7 +12,9 @@ import {
   pagesPerDay,
   readYears,
 } from '../../core/stats';
-import { LibraryList } from '../library-list/library-list';
+import { Auth } from '../../core/auth';
+import { categoryColor } from '../../core/category-colors';
+import { LibraryItem, itemRoute } from '../../core/models';
 
 const GOAL_KEY = 'yearGoal';
 
@@ -25,16 +27,27 @@ function storedGoal(): number {
   }
 }
 
+function greeting(hour: number): string {
+  if (hour < 6) {
+    return 'Goedenacht';
+  }
+  if (hour < 12) {
+    return 'Goedemorgen';
+  }
+  return hour < 18 ? 'Goedemiddag' : 'Goedenavond';
+}
+
 const MONTHS = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
 
 @Component({
   selector: 'app-dashboard',
-  imports: [LibraryList, DecimalPipe, RouterLink],
+  imports: [DecimalPipe, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   private readonly libraryItems = inject(LibraryItems);
+  private readonly auth = inject(Auth);
 
   protected readonly months = MONTHS;
   protected readonly goal = signal(storedGoal());
@@ -49,13 +62,51 @@ export class Dashboard {
   );
 
   protected readonly categories = computed(() => categoryStats(this.data()));
-  protected readonly maxBooks = computed(() => Math.max(1, ...this.categories().map((c) => c.books)));
+  protected readonly maxBooks = computed(() =>
+    Math.max(1, ...this.categories().map((c) => c.books)),
+  );
   protected readonly perMonth = computed(() => booksPerMonth(this.data(), this.selectedYear()));
   protected readonly maxMonth = computed(() => Math.max(1, ...this.perMonth()));
   protected readonly yearCount = computed(() => booksInYear(this.data(), this.currentYear));
-  protected readonly goalPercent = computed(() => Math.min(100, (this.yearCount() / this.goal()) * 100));
+  protected readonly goalPercent = computed(() =>
+    Math.min(100, (this.yearCount() / this.goal()) * 100),
+  );
   protected readonly pace = computed(() => pagesPerDay(this.data()));
-  protected readonly authors = computed(() => authorCounts(this.data()));
+  protected readonly authors = computed(() => authorCounts(this.data()).slice(0, 6));
+
+  protected readonly firstName = computed(
+    () =>
+      ((this.auth.user()?.user_metadata?.['full_name'] as string | undefined) ?? '').split(' ')[0],
+  );
+  protected readonly greeting = greeting(new Date().getHours());
+  protected readonly nameSuffix = computed(() => (this.firstName() ? `, ${this.firstName()}` : ''));
+  protected readonly today = new Date().toLocaleDateString('nl-NL', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+
+  /** Wat nu gelezen of bekeken wordt, en anders de laatst toegevoegde items. */
+  protected readonly shelf = computed(() => {
+    const busy = this.data().filter((i) => i.status === 'IN_PROGRESS');
+    return busy.length ? busy : this.data().slice(0, 8);
+  });
+  protected readonly shelfIsBusy = computed(() =>
+    this.data().some((i) => i.status === 'IN_PROGRESS'),
+  );
+  protected readonly totalRead = computed(
+    () => this.data().filter((i) => i.status === 'DONE').length,
+  );
+  protected readonly totalPages = computed(() =>
+    this.data()
+      .filter((i) => i.type === 'BOOK' && i.status === 'DONE')
+      .reduce((sum, i) => sum + (i.page_count ?? 0), 0),
+  );
+  protected readonly color = categoryColor;
+
+  protected link(item: LibraryItem): string[] {
+    return [itemRoute(item.type), item.id];
+  }
 
   protected setGoal(event: Event): void {
     const value = Math.floor(Number((event.target as HTMLInputElement).value));

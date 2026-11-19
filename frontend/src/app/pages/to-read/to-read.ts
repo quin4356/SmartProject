@@ -1,13 +1,12 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LibraryItems } from '../../core/library-items';
 import { ItemType, itemRoute } from '../../core/models';
 import { categoryColor, categoryLabel } from '../../core/category-colors';
 
 @Component({
   selector: 'app-to-read',
-  imports: [RouterLink, MatProgressSpinnerModule],
+  imports: [RouterLink],
   templateUrl: './to-read.html',
   styleUrl: './to-read.scss',
 })

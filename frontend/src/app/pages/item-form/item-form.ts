@@ -109,7 +109,11 @@ export class ItemForm implements OnInit {
       });
       this.form.controls.status.valueChanges.subscribe((status) => {
         const start = this.form.controls.startDate.value;
-        const dates = datesForStatus(this.loaded?.status ?? null, status, start && toIsoDate(start));
+        const dates = datesForStatus(
+          this.loaded?.status ?? null,
+          status,
+          start && toIsoDate(start),
+        );
         this.form.patchValue({
           startDate: this.fromIsoDate(dates.start_date),
           endDate: this.fromIsoDate(dates.end_date),
@@ -222,7 +226,7 @@ export class ItemForm implements OnInit {
     }
     this.coverUrl.set(book.coverUrl);
     this.category = book.category ?? '';
-    this.pageCount = book.pageCount ?? null;
+    this.pageCount = book.pageCount || null; // Google Books geeft soms 0; de database eist > 0
     this.form.patchValue({
       creatorName: book.authors.length
         ? book.authors.join(', ').slice(0, MAX_CREATOR_LENGTH)

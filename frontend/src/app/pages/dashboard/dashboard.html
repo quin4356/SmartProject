@@ -1,102 +1,233 @@
-<main class="dashboard">
-  <h1>Dashboard</h1>
-
-  @if (!items.isLoading() && !items.error() && data().length === 0) {
-    <section class="panel">
-      <h2>Welkom</h2>
-      <p>Je bibliotheek is nog leeg. Begin met je eerste item:</p>
-      <p>
-        <a routerLink="/library/books/new">Boek toevoegen</a> ·
-        <a routerLink="/library/documentaries/new">Documentaire toevoegen</a>
-      </p>
-    </section>
-  }
-
-  <section class="panel">
-    <h2>Jaardoel {{ currentYear }}</h2>
-    <p>
-      {{ yearCount() }} van
-      <input type="number" min="1" [value]="goal()" (change)="setGoal($event)" aria-label="Jaardoel" />
-      boeken
-    </p>
-    <div class="bar-track"><div class="bar-fill" [style.width.%]="goalPercent()"></div></div>
-  </section>
-
-  <section class="panel">
-    <h2>Kennis per categorie</h2>
-    @if (categories().length === 0) {
-      <p>Nog geen gelezen boeken.</p>
-    } @else {
-      <table>
-        <thead>
-          <tr><th>Categorie</th><th>Boeken</th><th>Pagina's</th><th>Gem. rating</th></tr>
-        </thead>
-        <tbody>
-          @for (c of categories(); track c.category) {
-            <tr>
-              <td>{{ c.category }}</td>
-              <td>
-                <div class="bar-track small">
-                  <div class="bar-fill" [style.width.%]="(c.books / maxBooks()) * 100"></div>
-                </div>
-                {{ c.books }}
-              </td>
-              <td>{{ c.pages }}</td>
-              <td>{{ c.avgRating === null ? '–' : (c.avgRating | number: '1.1-1') }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    }
-  </section>
-
-  <section class="panel">
-    <h2>Verloop</h2>
-    <label>
-      Jaar
-      <select (change)="selectYear($event)">
-        @for (y of years(); track y) {
-          <option [value]="y" [selected]="y === selectedYear()">{{ y }}</option>
-        }
-      </select>
-    </label>
-    <div class="months">
-      @for (n of perMonth(); track $index) {
-        <div class="month">
-          <span>{{ n }}</span>
-          <div class="column" [style.height.px]="(n / maxMonth()) * 80"></div>
-          <span>{{ months[$index] }}</span>
-        </div>
+<main class="page dashboard">
+  <header class="intro">
+    <p class="eyebrow rise">{{ today }}</p>
+    <h1 class="rise">
+      {{ greeting }}<em>{{ nameSuffix() }}</em
+      >.
+    </h1>
+    <p class="lede rise">
+      @if (items.isLoading()) {
+        Je bibliotheek wordt geladen…
+      } @else {
+        Je hebt dit jaar <strong class="num">{{ yearCount() }}</strong>
+        {{ yearCount() === 1 ? 'boek' : 'boeken' }} uitgelezen.
       }
+    </p>
+    <div class="intro__actions rise">
+      <a routerLink="/library/books/new" class="pill pill--lamp">+ Boek</a>
+      <a routerLink="/library/documentaries/new" class="pill">+ Documentaire</a>
     </div>
-  </section>
+  </header>
 
-  <section class="panel">
-    <h2>Leestempo</h2>
-    @if (pace() === null) {
-      <p>Nog onvoldoende gegevens.</p>
+  @if (items.isLoading()) {
+    <div class="bento" aria-busy="true" aria-label="Laden">
+      <div class="skeleton tile tile--wide" style="height: 220px"></div>
+      <div class="skeleton tile" style="height: 220px"></div>
+      <div class="skeleton tile" style="height: 220px"></div>
+      <div class="skeleton tile tile--wide" style="height: 260px"></div>
+    </div>
+  } @else if (items.error()) {
+    <p class="empty">Laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.</p>
+  } @else {
+    @if (data().length === 0) {
+      <section class="empty welcome">
+        <h2>Je plank is nog leeg</h2>
+        <p>Voeg je eerste boek of documentaire toe. Een titel is genoeg, de rest zoeken we op.</p>
+        <p>
+          <a routerLink="/library/books/new">Boek toevoegen</a> ·
+          <a routerLink="/library/documentaries/new">Documentaire toevoegen</a>
+        </p>
+      </section>
     } @else {
-      <p>{{ pace() | number: '1.0-0' }} pagina's per dag</p>
+      <section class="strip" aria-labelledby="strip-title">
+        <div class="strip__head">
+          <h2 id="strip-title">{{ shelfIsBusy() ? 'Nu bezig' : 'Recent toegevoegd' }}</h2>
+          @if (shelf().length > 4) {
+            <span class="strip__hint num">scroll →</span>
+          }
+        </div>
+        <div class="strip__track" tabindex="0" aria-label="Boeken en documentaires">
+          @for (item of shelf(); track item.id) {
+            <a class="cover" [routerLink]="link(item)" [style.--c]="color(item)">
+              @if (item.cover_url) {
+                <img [src]="item.cover_url" alt="" loading="lazy" />
+              } @else {
+                <span class="cover__blank">{{ item.title }}</span>
+              }
+              <span class="cover__meta">
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.creator_name }}</small>
+              </span>
+            </a>
+          }
+        </div>
+      </section>
     }
-  </section>
 
-  @if (authors().length) {
-    <details class="authors">
-      <summary>Auteurs</summary>
-      <ul>
-        @for (a of authors(); track a.author) {
-          <li>{{ a.author }} ({{ a.books }})</li>
+    <div class="bento">
+      <section class="panel tile tile--wide goal reveal">
+        <div>
+          <p class="eyebrow">Jaardoel {{ currentYear }}</p>
+          <p class="goal__count">
+            <span class="num">{{ yearCount() }}</span>
+            <small>van</small>
+            <input
+              class="num"
+              type="number"
+              min="1"
+              [value]="goal()"
+              (change)="setGoal($event)"
+              aria-label="Jaardoel aantal boeken"
+            />
+          </p>
+          <p class="muted">
+            @if (goalPercent() >= 100) {
+              Doel gehaald. Alles wat nu komt is bonus.
+            } @else {
+              Nog {{ goal() - yearCount() }} te gaan.
+            }
+          </p>
+        </div>
+        <svg
+          class="ring"
+          viewBox="0 0 120 120"
+          role="img"
+          [attr.aria-label]="(goalPercent() | number: '1.0-0') + '% van je jaardoel'"
+        >
+          <circle cx="60" cy="60" r="52" pathLength="100" class="ring__track" />
+          <circle
+            cx="60"
+            cy="60"
+            r="52"
+            pathLength="100"
+            class="ring__fill"
+            [style.stroke-dasharray]="goalPercent() + ' 100'"
+          />
+          <text x="60" y="66" text-anchor="middle" class="num">
+            {{ goalPercent() | number: '1.0-0' }}%
+          </text>
+        </svg>
+      </section>
+
+      <section class="panel tile stat reveal">
+        <p class="eyebrow">Leestempo</p>
+        @if (pace() === null) {
+          <p class="stat__value">–</p>
+          <p class="muted">Rond een boek af met start- en einddatum.</p>
+        } @else {
+          <p class="stat__value num">{{ pace() | number: '1.0-0' }}</p>
+          <p class="muted">pagina's per dag</p>
         }
-      </ul>
-    </details>
+      </section>
+
+      <section class="panel tile stat reveal">
+        <p class="eyebrow">Totaal uitgelezen</p>
+        <p class="stat__value num">{{ totalRead() }}</p>
+        <p class="muted">
+          <span class="num">{{ totalPages() | number }}</span> pagina's gelezen
+        </p>
+      </section>
+
+      <section class="panel tile tile--wide reveal">
+        <div class="tile__head">
+          <h2>Verloop</h2>
+          <select (change)="selectYear($event)" aria-label="Jaar">
+            @for (y of years(); track y) {
+              <option [value]="y" [selected]="y === selectedYear()">{{ y }}</option>
+            }
+          </select>
+        </div>
+        <div class="months">
+          @for (n of perMonth(); track $index) {
+            <div class="month" [class.is-empty]="!n">
+              <span class="month__n num">{{ n || '' }}</span>
+              <div
+                class="column"
+                [style.height.%]="(n / maxMonth()) * 100"
+                [style.--i]="$index"
+              ></div>
+              <span class="month__label">{{ months[$index] }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="panel tile tile--wide reveal">
+        <h2>Kennis per categorie</h2>
+        @if (categories().length === 0) {
+          <p class="muted">Nog geen gelezen boeken.</p>
+        } @else {
+          <table>
+            <caption class="sr-only">
+              Gelezen boeken per categorie
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Categorie</th>
+                <th scope="col">Boeken</th>
+                <th scope="col" class="num-col">Pagina's</th>
+                <th scope="col" class="num-col">Gem.</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of categories(); track c.category) {
+                <tr [style.--c]="color({ type: 'BOOK', category: c.category })">
+                  <td><span class="dot"></span>{{ c.category }}</td>
+                  <td class="bar-cell">
+                    <div class="bar-track">
+                      <div class="bar-fill" [style.width.%]="(c.books / maxBooks()) * 100"></div>
+                    </div>
+                    <span class="num">{{ c.books }}</span>
+                  </td>
+                  <td class="num num-col">{{ c.pages | number }}</td>
+                  <td class="num num-col">
+                    {{ c.avgRating === null ? '–' : (c.avgRating | number: '1.1-1') }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </section>
+
+      <section class="panel tile tile--wide reveal">
+        <h2>Auteurs</h2>
+        @if (authors().length === 0) {
+          <p class="muted">Nog geen gelezen boeken.</p>
+        } @else {
+          <ol class="authors">
+            @for (a of authors(); track a.author) {
+              <li>
+                <span>{{ a.author }}</span>
+                <span class="num">{{ a.books }}</span>
+              </li>
+            }
+          </ol>
+        }
+      </section>
+
+      <section class="panel tile tile--wide export reveal">
+        <h2>Exporteren</h2>
+        <p class="muted">Neem je bibliotheek mee, waar je maar wilt.</p>
+        <div class="export__buttons">
+          <button
+            type="button"
+            class="btn-ghost"
+            (click)="exportCsv()"
+            [disabled]="data().length === 0"
+          >
+            CSV
+          </button>
+          <button
+            type="button"
+            class="btn-ghost"
+            (click)="exportJson()"
+            [disabled]="data().length === 0"
+          >
+            JSON
+          </button>
+        </div>
+      </section>
+    </div>
   }
-
-  <section class="panel">
-    <h2>Exporteren</h2>
-    <button type="button" (click)="exportCsv()" [disabled]="data().length === 0">CSV</button>
-    <button type="button" (click)="exportJson()" [disabled]="data().length === 0">JSON</button>
-  </section>
-
-  <app-library-list type="BOOK" />
-  <app-library-list type="DOCUMENTARY" />
 </main>
