@@ -1,0 +1,32 @@
+# Netlify: bouwt de Angular-app in frontend/ en publiceert de statische bestanden.
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist/smartproject-web/browser"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Single-page app: elke route (bv. /dashboard) laadt index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Bestanden met een hash in de naam veranderen nooit: lang cachen.
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
