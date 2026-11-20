@@ -26,8 +26,6 @@
 .word {
   display: inline-block;
   margin-right: 0.22em;
-  animation: word-in 0.9s var(--ease) backwards;
-  animation-delay: calc(var(--i) * 90ms + 150ms);
 
   // laatste drie woorden in cursief lamplicht
   &:nth-last-child(-n + 3) {
@@ -36,21 +34,12 @@
   }
 }
 
-@keyframes word-in {
-  from {
-    opacity: 0;
-    transform: translateY(0.4em) rotate(3deg);
-    filter: blur(8px);
-  }
-}
 
 .hero__lede {
   margin: 0 0 2.25rem;
-  animation: fade-up 0.8s var(--ease) 0.9s backwards;
 }
 
 .cta {
-  animation: fade-up 0.8s var(--ease) 1.05s backwards;
 
   &__error {
     color: #f08a7a;
@@ -155,8 +144,6 @@
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.06),
     0 10px 20px -8px rgba(0, 0, 0, 0.8);
-  animation: spine-in 1s var(--ease) backwards;
-  animation-delay: calc(var(--i) * 80ms + 400ms);
   transition: transform 0.5s var(--ease);
   pointer-events: auto;
 
@@ -187,12 +174,6 @@
   }
 }
 
-@keyframes spine-in {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-}
 
 // Plank zakt zachtjes weg bij het scrollen
 @supports (animation-timeline: scroll()) {
@@ -410,8 +391,6 @@
     border-radius: 4px 4px 0 0;
     background: linear-gradient(var(--lamp), rgba(242, 180, 90, 0.2));
     transform-origin: bottom;
-    animation: grow-y 0.9s var(--ease) backwards;
-    animation-delay: calc(var(--i) * 50ms);
   }
 }
 

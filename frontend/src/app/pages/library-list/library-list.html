@@ -1,18 +1,17 @@
 <main class="page library">
   <header class="header">
     <div>
-      <p class="eyebrow rise">
-        Bibliotheek
-        @if (items.value(); as all) {
-          · <span class="num">{{ all.length }}</span> {{ all.length === 1 ? 'titel' : 'titels' }}
-        }
-      </p>
-      <h1 class="rise">{{ title() }}</h1>
+      <h1>{{ title() }}</h1>
+      @if (items.value(); as all) {
+        <p class="muted">
+          <span class="num">{{ all.length }}</span> {{ all.length === 1 ? 'titel' : 'titels' }}
+        </p>
+      }
     </div>
-    <a class="pill pill--lamp rise" [routerLink]="addRoute()">+ Toevoegen</a>
+    <a class="btn btn--primary" [routerLink]="addRoute()">Toevoegen</a>
   </header>
 
-  <div class="filters glass">
+  <div class="filters">
     <label class="search">
       <mat-icon aria-hidden="true">search</mat-icon>
       <input
@@ -47,14 +46,14 @@
     <div class="empty">
       <h2>Nog niets op deze plank</h2>
       <p>Voeg je eerste titel toe, de rest zoeken we voor je op.</p>
-      <a class="pill pill--lamp" [routerLink]="addRoute()">+ Toevoegen</a>
+      <a class="btn btn--primary" [routerLink]="addRoute()">Toevoegen</a>
     </div>
   } @else if (visible().length === 0) {
     <p class="empty">Geen resultaten voor deze filters.</p>
   } @else {
     <div class="grid">
       @for (item of visible(); track item.id) {
-        <article class="card" appTilt [style.--c]="color(item)" [style.--d]="$index">
+        <article class="card" [style.--c]="color(item)" [style.--d]="$index">
           <a
             class="card__cover"
             [routerLink]="[editBase(), item.id]"
@@ -65,8 +64,7 @@
             } @else {
               <span class="card__blank">{{ item.title }}</span>
             }
-            <span class="card__glare" aria-hidden="true"></span>
-            <span class="badge glass">{{ statusLabel(item.type, item.status) }}</span>
+            <span class="badge">{{ statusLabel(item.type, item.status) }}</span>
           </a>
 
           <div class="card__body">

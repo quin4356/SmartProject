@@ -1,11 +1,10 @@
 <main class="page dashboard">
   <header class="intro">
-    <p class="eyebrow rise">{{ today }}</p>
-    <h1 class="rise">
+    <h1>
       {{ greeting }}<em>{{ nameSuffix() }}</em
       >.
     </h1>
-    <p class="lede rise">
+    <p class="lede">
       @if (items.isLoading()) {
         Je bibliotheek wordt geladen…
       } @else {
@@ -13,18 +12,16 @@
         {{ yearCount() === 1 ? 'boek' : 'boeken' }} uitgelezen.
       }
     </p>
-    <div class="intro__actions rise">
-      <a routerLink="/library/books/new" class="pill pill--lamp">+ Boek</a>
-      <a routerLink="/library/documentaries/new" class="pill">+ Documentaire</a>
+    <div class="intro__actions">
+      <a routerLink="/library/books/new" class="btn btn--primary">Boek toevoegen</a>
+      <a routerLink="/library/documentaries/new" class="btn">Documentaire toevoegen</a>
     </div>
   </header>
 
   @if (items.isLoading()) {
-    <div class="bento" aria-busy="true" aria-label="Laden">
-      <div class="skeleton tile tile--wide" style="height: 220px"></div>
-      <div class="skeleton tile" style="height: 220px"></div>
-      <div class="skeleton tile" style="height: 220px"></div>
-      <div class="skeleton tile tile--wide" style="height: 260px"></div>
+    <div class="sections" aria-busy="true" aria-label="Laden">
+      <div class="skeleton" style="height: 220px"></div>
+      <div class="skeleton" style="height: 260px"></div>
     </div>
   } @else if (items.error()) {
     <p class="empty">Laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.</p>
@@ -33,9 +30,9 @@
       <section class="empty welcome">
         <h2>Je plank is nog leeg</h2>
         <p>Voeg je eerste boek of documentaire toe. Een titel is genoeg, de rest zoeken we op.</p>
-        <p>
-          <a routerLink="/library/books/new">Boek toevoegen</a> ·
-          <a routerLink="/library/documentaries/new">Documentaire toevoegen</a>
+        <p class="welcome__actions">
+          <a class="btn btn--primary" routerLink="/library/books/new">Boek toevoegen</a>
+          <a class="btn" routerLink="/library/documentaries/new">Documentaire toevoegen</a>
         </p>
       </section>
     } @else {
@@ -64,10 +61,10 @@
       </section>
     }
 
-    <div class="bento">
-      <section class="panel tile tile--wide goal reveal">
+    <div class="sections">
+      <section class="section goal">
         <div>
-          <p class="eyebrow">Jaardoel {{ currentYear }}</p>
+          <h2>Jaardoel {{ currentYear }}</h2>
           <p class="goal__count">
             <span class="num">{{ yearCount() }}</span>
             <small>van</small>
@@ -109,8 +106,8 @@
         </svg>
       </section>
 
-      <section class="panel tile stat reveal">
-        <p class="eyebrow">Leestempo</p>
+      <section class="section stat">
+        <h2>Leestempo</h2>
         @if (pace() === null) {
           <p class="stat__value">–</p>
           <p class="muted">Rond een boek af met start- en einddatum.</p>
@@ -120,16 +117,16 @@
         }
       </section>
 
-      <section class="panel tile stat reveal">
-        <p class="eyebrow">Totaal uitgelezen</p>
+      <section class="section stat">
+        <h2>Totaal uitgelezen</h2>
         <p class="stat__value num">{{ totalRead() }}</p>
         <p class="muted">
           <span class="num">{{ totalPages() | number }}</span> pagina's gelezen
         </p>
       </section>
 
-      <section class="panel tile tile--wide reveal">
-        <div class="tile__head">
+      <section class="section">
+        <div class="section__head">
           <h2>Verloop</h2>
           <select (change)="selectYear($event)" aria-label="Jaar">
             @for (y of years(); track y) {
@@ -152,7 +149,7 @@
         </div>
       </section>
 
-      <section class="panel tile tile--wide reveal">
+      <section class="section">
         <h2>Kennis per categorie</h2>
         @if (categories().length === 0) {
           <p class="muted">Nog geen gelezen boeken.</p>
@@ -190,7 +187,7 @@
         }
       </section>
 
-      <section class="panel tile tile--wide reveal">
+      <section class="section">
         <h2>Auteurs</h2>
         @if (authors().length === 0) {
           <p class="muted">Nog geen gelezen boeken.</p>
@@ -206,13 +203,13 @@
         }
       </section>
 
-      <section class="panel tile tile--wide export reveal">
+      <section class="section export">
         <h2>Exporteren</h2>
         <p class="muted">Neem je bibliotheek mee, waar je maar wilt.</p>
         <div class="export__buttons">
           <button
             type="button"
-            class="btn-ghost"
+            class="btn"
             (click)="exportCsv()"
             [disabled]="data().length === 0"
           >
@@ -220,7 +217,7 @@
           </button>
           <button
             type="button"
-            class="btn-ghost"
+            class="btn"
             (click)="exportJson()"
             [disabled]="data().length === 0"
           >

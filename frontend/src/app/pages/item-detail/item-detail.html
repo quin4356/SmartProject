@@ -10,7 +10,7 @@
     </div>
   } @else if (item.value(); as i) {
     <div class="detail__grid">
-      <div class="detail__cover rise" [style.--c]="color(i)">
+      <div class="detail__cover" [style.--c]="color(i)">
         @if (i.cover_url) {
           <img [src]="i.cover_url" [alt]="'Omslag van ' + i.title" />
         } @else {
@@ -19,11 +19,14 @@
       </div>
 
       <div class="detail__text">
-        <p class="eyebrow rise">{{ statusLabel() }}</p>
-        <h1 class="rise">{{ i.title }}</h1>
-        <p class="detail__creator rise">{{ i.creator_name }}</p>
+        <h1>{{ i.title }}</h1>
+        <p class="detail__creator">{{ i.creator_name }}</p>
 
-        <dl class="facts rise">
+        <dl class="facts">
+          <div>
+            <dt>Status</dt>
+            <dd>{{ statusLabel() }}</dd>
+          </div>
           @if (i.rating) {
             <div>
               <dt>Beoordeling</dt>
@@ -57,13 +60,13 @@
         </dl>
 
         @if (i.description) {
-          <p class="detail__desc rise">{{ i.description }}</p>
+          <p class="detail__desc">{{ i.description }}</p>
         }
-        <div class="actions rise">
-          <a class="pill pill--lamp" [routerLink]="editRoute()">Bewerken</a>
+        <div class="actions">
+          <a class="btn btn--primary" [routerLink]="editRoute()">Bewerken</a>
           <button
             type="button"
-            class="pill pill--danger"
+            class="btn btn--danger"
             (click)="remove(i.id, i.title)"
             [disabled]="deleting()"
           >

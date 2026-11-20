@@ -2,7 +2,6 @@
   margin: 1rem 0 2rem;
 
   h1 {
-    animation-delay: 0.06s;
 
     em {
       color: var(--lamp);
@@ -91,8 +90,6 @@
   top: 0;
   height: 100%;
   transform-origin: left;
-  animation: grow-x 0.8s var(--ease) backwards;
-  animation-delay: calc(var(--d) * 60ms + 0.15s);
   transition:
     transform 0.3s var(--ease),
     filter 0.3s;

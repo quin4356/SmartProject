@@ -19,7 +19,7 @@ const MAX_PDF_BYTES = 52_428_800;
           <mat-label>Wat wil je onthouden?</mat-label>
           <textarea matInput [(ngModel)]="note" rows="6" maxlength="20000"></textarea>
         </mat-form-field>
-        <button type="button" class="btn-ghost" (click)="saveNote()">Notitie opslaan</button>
+        <button type="button" class="btn" (click)="saveNote()">Notitie opslaan</button>
       </div>
 
       <div class="box panel">
@@ -28,7 +28,7 @@ const MAX_PDF_BYTES = 52_428_800;
           <mat-label>Kommagescheiden</mat-label>
           <input matInput [(ngModel)]="topics" />
         </mat-form-field>
-        <button type="button" class="btn-ghost" (click)="saveTopics()">Onderwerpen opslaan</button>
+        <button type="button" class="btn" (click)="saveTopics()">Onderwerpen opslaan</button>
       </div>
 
       <div class="box panel">
@@ -39,8 +39,8 @@ const MAX_PDF_BYTES = 52_428_800;
             <span class="num muted">({{ a.size_bytes / 1048576 | number: '1.1-1' }} MB)</span>
           </p>
           <p class="row">
-            <button type="button" class="btn-ghost" (click)="open(a)">Openen</button>
-            <button type="button" class="btn-ghost" (click)="remove(a)">Verwijderen</button>
+            <button type="button" class="btn" (click)="open(a)">Openen</button>
+            <button type="button" class="btn" (click)="remove(a)">Verwijderen</button>
           </p>
         }
         <input

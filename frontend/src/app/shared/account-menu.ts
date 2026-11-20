@@ -56,16 +56,15 @@ import { ConfirmDialog } from './confirm-dialog';
     .account__initial {
       width: 30px;
       height: 30px;
-      border-radius: 50%;
+      border-radius: 0;
       margin-right: 0.6rem;
       object-fit: cover;
-      box-shadow: 0 0 0 1px var(--line-strong);
     }
     .account__initial {
       display: inline-grid;
       place-items: center;
-      background: var(--lamp);
-      color: var(--ink);
+      background: var(--primary);
+      color: var(--on-dark);
       font: 500 0.85rem var(--font-body);
     }
     .account__profile {
@@ -81,7 +80,7 @@ import { ConfirmDialog } from './confirm-dialog';
       color: var(--paper-dim);
     }
     .account__danger {
-      color: #f08a7a;
+      color: var(--primary);
     }
     @media (max-width: 520px) {
       .account__name {

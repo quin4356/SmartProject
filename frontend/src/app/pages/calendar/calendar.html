@@ -1,13 +1,12 @@
 <main class="page calendar">
   <header class="header">
-    <p class="eyebrow rise">Tijdlijn</p>
-    <h1 class="rise">Wanneer je <em>wat</em> las.</h1>
+    <h1>Wanneer je <em>wat</em> las.</h1>
   </header>
 
-  <div class="nav glass">
-    <button type="button" class="btn-ghost" (click)="shiftBack()" aria-label="Eerder">‹</button>
-    <button type="button" class="btn-ghost" (click)="reset()">Vandaag</button>
-    <button type="button" class="btn-ghost" (click)="shiftForward()" aria-label="Later">›</button>
+  <div class="nav">
+    <button type="button" class="btn" (click)="shiftBack()" aria-label="Eerder">‹</button>
+    <button type="button" class="btn" (click)="reset()">Vandaag</button>
+    <button type="button" class="btn" (click)="shiftForward()" aria-label="Later">›</button>
     <span class="range num">{{ rangeLabel() }}</span>
   </div>
 

@@ -15,13 +15,12 @@ import {
 } from '../../core/models';
 import { SortKey, filterItems } from '../../core/list-filter';
 import { ConfirmDialog } from '../../shared/confirm-dialog';
-import { Tilt } from '../../shared/tilt';
 import { categoryColor } from '../../core/category-colors';
 import { Component, computed, inject, input, resource, signal } from '@angular/core';
 
 @Component({
   selector: 'app-library-list',
-  imports: [MatButtonModule, MatIconModule, RouterLink, Tilt],
+  imports: [MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './library-list.html',
   styleUrl: './library-list.scss',
 })
