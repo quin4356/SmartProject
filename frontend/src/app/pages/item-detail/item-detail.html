@@ -1,77 +1,95 @@
 <main class="page detail">
   @if (item.isLoading()) {
-    <div class="detail__grid" aria-busy="true" aria-label="Laden">
-      <div class="skeleton" style="aspect-ratio: 2 / 3"></div>
-      <div>
-        <div class="skeleton" style="height: 1rem; width: 30%"></div>
-        <div class="skeleton" style="height: 4rem; margin: 1rem 0"></div>
-        <div class="skeleton" style="height: 8rem"></div>
-      </div>
+    <div aria-busy="true" aria-label="Laden">
+      <div class="skeleton" style="height: 4rem; width: 70%"></div>
+      <div class="skeleton" style="height: 12rem; margin-top: 2rem"></div>
     </div>
   } @else if (item.value(); as i) {
-    <div class="detail__grid">
-      <div class="detail__cover rise" [style.--c]="color(i)">
-        @if (i.cover_url) {
-          <img [src]="i.cover_url" [alt]="'Omslag van ' + i.title" />
-        } @else {
-          <span>{{ i.title }}</span>
-        }
-      </div>
-
-      <div class="detail__text">
-        <p class="eyebrow rise">{{ statusLabel() }}</p>
-        <h1 class="rise">{{ i.title }}</h1>
-        <p class="detail__creator rise">{{ i.creator_name }}</p>
-
-        <dl class="facts rise">
-          @if (i.rating) {
-            <div>
-              <dt>Beoordeling</dt>
-              <dd class="num">{{ i.rating }} / 5</dd>
-            </div>
-          }
-          @if (i.category) {
-            <div>
-              <dt>Categorie</dt>
-              <dd>{{ i.category }}</dd>
-            </div>
-          }
-          @if (i.page_count) {
-            <div>
-              <dt>Pagina's</dt>
-              <dd class="num">{{ i.page_count }}</dd>
-            </div>
-          }
-          @if (i.start_date) {
-            <div>
-              <dt>Gestart</dt>
-              <dd class="num">{{ i.start_date }}</dd>
-            </div>
-          }
-          @if (i.end_date) {
-            <div>
-              <dt>Afgerond</dt>
-              <dd class="num">{{ i.end_date }}</dd>
-            </div>
-          }
-        </dl>
-
-        @if (i.description) {
-          <p class="detail__desc rise">{{ i.description }}</p>
-        }
-        <div class="actions rise">
-          <a class="pill pill--lamp" [routerLink]="editRoute()">Bewerken</a>
-          <button
-            type="button"
-            class="pill pill--danger"
-            (click)="remove(i.id, i.title)"
-            [disabled]="deleting()"
-          >
-            Verwijderen
-          </button>
+    <article class="colophon" [style.--c]="group(i).color">
+      <header class="colophon__head">
+        <div>
+          <h1>{{ i.title }}</h1>
+          <p class="colophon__creator">{{ i.creator_name }}</p>
         </div>
+        @if (i.cover_url) {
+          <img class="colophon__cover" [src]="i.cover_url" [alt]="'Omslag van ' + i.title" />
+        }
+      </header>
+
+      <dl class="facts">
+        <dt>{{ i.type === 'BOOK' ? 'Auteur' : 'Regisseur' }}</dt>
+        <dd>{{ i.creator_name }}</dd>
+
+        <dt>Categorie</dt>
+        <dd>
+          <span class="swatch" aria-hidden="true"></span>
+          {{ i.category ?? categoryLabel(i) }}
+        </dd>
+
+        <dt>Status</dt>
+        <dd>{{ statusLabel() }}</dd>
+
+        @if (i.page_count) {
+          <dt>Pagina's</dt>
+          <dd class="num">{{ i.page_count }}</dd>
+        }
+        @if (i.rating) {
+          <dt>Beoordeling</dt>
+          <dd class="num">{{ i.rating }} / 5</dd>
+        }
+
+        <dt>Toegevoegd</dt>
+        <dd class="num">{{ i.created_at | date: 'd MMMM y' }}</dd>
+        @if (i.start_date) {
+          <dt>Gestart</dt>
+          <dd class="num">{{ i.start_date | date: 'd MMMM y' }}</dd>
+        }
+        @if (i.end_date) {
+          <dt>Afgerond</dt>
+          <dd class="num">{{ i.end_date | date: 'd MMMM y' }}</dd>
+        }
+
+        <dt>Statusgeschiedenis</dt>
+        <dd>
+          @if (history.value(); as h) {
+            <ol class="history">
+              @for (e of h; track e.occurred_at) {
+                <li>
+                  <time class="num" [attr.datetime]="e.occurred_at">{{
+                    e.occurred_at | date: 'd MMM y, HH:mm'
+                  }}</time>
+                  {{ e.old_status ? label(i.type, e.old_status) + ' → ' : '' }}{{
+                    label(i.type, e.new_status)
+                  }}
+                </li>
+              } @empty {
+                <li>Nog geen wijzigingen.</li>
+              }
+            </ol>
+          } @else if (history.error()) {
+            Geschiedenis laden is mislukt.
+          } @else {
+            Laden…
+          }
+        </dd>
+      </dl>
+
+      @if (i.description) {
+        <p class="colophon__desc">{{ i.description }}</p>
+      }
+
+      <div class="actions">
+        <a class="btn btn--primary" [routerLink]="editRoute()">Bewerken</a>
+        <button
+          type="button"
+          class="btn btn--danger"
+          (click)="remove(i.id, i.title)"
+          [disabled]="deleting()"
+        >
+          Verwijderen
+        </button>
       </div>
-    </div>
+    </article>
   } @else {
     <p class="empty">Item niet gevonden.</p>
   }

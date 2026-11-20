@@ -1,3 +1,5 @@
+import { createClient } from 'npm:@supabase/supabase-js@2';
+
 const GOOGLE_BOOKS_URL = 'https://www.googleapis.com/books/v1/volumes';
 const MAX_RESULTS = 5;
 const MIN_QUERY_LENGTH = 2;
@@ -18,6 +20,14 @@ function json(body: unknown, status = 200): Response {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: CORS_HEADERS });
+  }
+
+  // Alleen aangemelde gebruikers mogen zoeken (beschermt het API-quotum).
+  const token = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
+  const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!);
+  const { data: auth, error: authError } = await userClient.auth.getUser(token);
+  if (authError || !auth.user) {
+    return json({ error: 'Unauthorized' }, 401);
   }
 
   const { query } = await req.json().catch(() => ({ query: '' }));

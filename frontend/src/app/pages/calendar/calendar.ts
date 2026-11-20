@@ -1,7 +1,7 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { LibraryItems } from '../../core/library-items';
 import { LibraryItem, toIsoDate as toIso, todayIso } from '../../core/models';
-import { categoryColor, categoryLabel } from '../../core/category-colors';
+import { categoryColor, categoryGroup, categoryLabel } from '../../core/category-colors';
 
 const WINDOW_DAYS = 90;
 const SHIFT_DAYS = 30;
@@ -133,6 +133,7 @@ export class Calendar {
   });
 
   protected readonly color = categoryColor;
+  protected readonly group = categoryGroup;
 
   protected shift(days: number): void {
     this.windowStart.set(toIso(new Date(Date.parse(this.windowStart()) + days * DAY_MS)));

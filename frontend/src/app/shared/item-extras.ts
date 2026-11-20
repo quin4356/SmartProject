@@ -19,7 +19,7 @@ const MAX_PDF_BYTES = 52_428_800;
           <mat-label>Wat wil je onthouden?</mat-label>
           <textarea matInput [(ngModel)]="note" rows="6" maxlength="20000"></textarea>
         </mat-form-field>
-        <button type="button" class="btn-ghost" (click)="saveNote()">Notitie opslaan</button>
+        <button type="button" class="btn" (click)="saveNote()">Notitie opslaan</button>
       </div>
 
       <div class="box panel">
@@ -28,7 +28,7 @@ const MAX_PDF_BYTES = 52_428_800;
           <mat-label>Kommagescheiden</mat-label>
           <input matInput [(ngModel)]="topics" />
         </mat-form-field>
-        <button type="button" class="btn-ghost" (click)="saveTopics()">Onderwerpen opslaan</button>
+        <button type="button" class="btn" (click)="saveTopics()">Onderwerpen opslaan</button>
       </div>
 
       <div class="box panel">
@@ -39,8 +39,8 @@ const MAX_PDF_BYTES = 52_428_800;
             <span class="num muted">({{ a.size_bytes / 1048576 | number: '1.1-1' }} MB)</span>
           </p>
           <p class="row">
-            <button type="button" class="btn-ghost" (click)="open(a)">Openen</button>
-            <button type="button" class="btn-ghost" (click)="remove(a)">Verwijderen</button>
+            <button type="button" class="btn" (click)="open(a)">Openen</button>
+            <button type="button" class="btn" (click)="remove(a)">Verwijderen</button>
           </p>
         }
         <input
@@ -102,15 +102,16 @@ const MAX_PDF_BYTES = 52_428_800;
     .file {
       max-width: 100%;
       font-size: 0.85rem;
-      color: var(--paper-dim);
+      color: var(--ink-soft);
     }
     .file::file-selector-button {
+      min-height: 44px;
       margin-right: 0.75rem;
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--line-strong);
-      border-radius: 999px;
+      padding: 0 1rem;
+      border: 2px solid var(--ink);
+      border-radius: 0;
       background: transparent;
-      color: var(--paper);
+      color: var(--ink);
       font: inherit;
       cursor: pointer;
     }
@@ -118,13 +119,13 @@ const MAX_PDF_BYTES = 52_428_800;
       list-style: none;
       margin: 0;
       padding: 0 0 0 1rem;
-      border-left: 1px solid var(--line-strong);
+      border-left: 1px solid var(--rule);
     }
     .history li {
       position: relative;
       padding: 0.35rem 0;
       font-size: 0.9rem;
-      color: var(--paper-dim);
+      color: var(--ink-soft);
     }
     .history li::before {
       content: '';
@@ -133,18 +134,17 @@ const MAX_PDF_BYTES = 52_428_800;
       top: 0.75rem;
       width: 7px;
       height: 7px;
-      border-radius: 50%;
-      background: var(--lamp);
+      background: var(--primary);
     }
     .history time {
       display: block;
-      font: 0.72rem var(--font-mono);
-      color: var(--paper-faint);
+      font-size: 0.85rem;
+      color: var(--ink-soft);
     }
     .status {
       grid-column: 1 / -1;
       margin: 0;
-      color: var(--lamp);
+      color: var(--primary);
     }
     @media (max-width: 700px) {
       .extras {

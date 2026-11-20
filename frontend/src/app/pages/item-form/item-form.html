@@ -1,9 +1,6 @@
 <main class="page item-form">
-  <p class="eyebrow rise">
-    {{ isBook() ? 'Boek' : 'Documentaire' }} · {{ editing() ? 'bewerken' : 'nieuw' }}
-  </p>
-  <h1 class="rise">{{ heading() }}</h1>
-  <div class="sheet panel rise">
+  <h1>{{ heading() }}</h1>
+  <div class="sheet panel">
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <mat-form-field appearance="outline" class="full">
         <mat-label>Titel</mat-label>
@@ -103,7 +100,7 @@
       }
 
       <div class="actions full">
-        <button mat-button type="button" (click)="cancel()" [disabled]="saving()">Annuleren</button>
+        <button mat-stroked-button type="button" (click)="cancel()" [disabled]="saving()">Annuleren</button>
         <button mat-flat-button type="submit" [disabled]="saving()">
           @if (saving()) {
             <mat-spinner diameter="20" aria-label="Bezig met opslaan" />

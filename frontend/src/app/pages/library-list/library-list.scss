@@ -1,281 +1,114 @@
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem 1.5rem;
   margin: 1rem 0 2rem;
 
   h1 {
     margin: 0;
-    animation-delay: 0.06s;
   }
 
-  .pill {
-    animation-delay: 0.12s;
+  p {
+    margin: 0.25rem 0 0;
   }
 }
 
+// Filterrij
 .filters {
-  position: sticky;
-  top: 5rem;
-  z-index: 5;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  padding: 0.5rem;
-  margin-bottom: 2rem;
-  border-radius: 999px;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
-.search {
-  position: relative;
-  flex: 1 1 260px;
-
-  mat-icon {
-    position: absolute;
-    left: 0.8rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-    color: var(--paper-faint);
-  }
-
-  input {
-    width: 100%;
-    box-sizing: border-box;
-    padding-left: 2.4rem;
-  }
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 2rem 1.5rem;
-}
-
-.empty h2 {
-  color: var(--paper);
-}
-
-// Kaart met omslag
-.card {
-  --rx: 0deg;
-  --ry: 0deg;
-  position: relative;
+.field {
   display: flex;
   flex-direction: column;
-  animation: fade-up 0.6s var(--ease) backwards;
-  animation-delay: calc(min(var(--d), 12) * 40ms);
-}
+  gap: 0.3rem;
 
-.card__cover {
-  position: relative;
-  display: block;
-  aspect-ratio: 2 / 3;
-  border-radius: 12px;
-  color: var(--paper);
-  text-decoration: none;
-  overflow: hidden;
-  background: linear-gradient(160deg, var(--c), color-mix(in srgb, var(--c) 40%, black));
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 24px 40px -22px rgba(0, 0, 0, 0.95);
-  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
-  transition:
-    transform 0.4s var(--ease),
-    box-shadow 0.4s;
-  will-change: transform;
+  label {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.7s var(--ease);
+  &--grow {
+    flex: 1 1 260px;
   }
 }
 
-.card__blank {
+.toggle {
   display: flex;
-  align-items: flex-end;
-  height: 100%;
-  padding: 1rem;
-  box-sizing: border-box;
-  font: 400 1.05rem/1.15 var(--font-display);
-  color: var(--paper);
-  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.35));
-  overflow: hidden;
-}
 
-// lichtvlek die de muis volgt
-.card__glare {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at var(--gx, 50%) var(--gy, 0%),
-    rgba(255, 255, 255, 0.22),
-    transparent 55%
-  );
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-
-.badge {
-  position: absolute;
-  left: 0.6rem;
-  top: 0.6rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 999px;
-  font: 500 0.68rem var(--font-body);
-  letter-spacing: 0.02em;
-  color: var(--paper);
-}
-
-.card:hover {
-  .card__cover {
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.08) inset,
-      0 40px 60px -26px rgba(0, 0, 0, 1);
+  .btn + .btn {
+    border-left-width: 0;
   }
 
-  .card__glare {
-    opacity: 1;
-  }
-
-  img {
-    transform: scale(1.05);
+  .btn[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--on-dark);
   }
 }
 
-.card__body {
-  padding: 0.9rem 0.1rem 0;
+// Plank per categorie
+.shelf-block {
+  margin-bottom: 3rem;
+
+  h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 1.5rem;
+  }
 }
 
-.card__title {
-  font-size: 1.1rem;
-  line-height: 1.2;
-  margin: 0 0 0.2rem;
+.count {
+  font: 500 1rem var(--font-body);
+  color: var(--ink-soft);
+}
 
-  a {
-    color: var(--paper);
+// Lijstweergave
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    font-weight: 500;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  td a {
+    font-weight: 500;
     text-decoration: none;
-    background: linear-gradient(var(--lamp), var(--lamp)) 0 100% / 0 1px no-repeat;
-    transition: background-size 0.4s var(--ease);
 
     &:hover {
-      background-size: 100% 1px;
+      text-decoration: underline;
     }
   }
 }
 
-.card__creator {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--paper-dim);
+.num-col {
+  text-align: right !important;
 }
 
-.card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0.6rem 0 0;
-}
-
-.chip {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.row-actions {
   white-space: nowrap;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  color: var(--paper);
-  background: color-mix(in srgb, var(--c) 45%, transparent);
-  border: 1px solid color-mix(in srgb, var(--c) 70%, transparent);
-}
-
-.stars {
-  display: inline-flex;
-  gap: 2px;
-
-  i {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--line-strong);
-
-    &.on {
-      background: var(--lamp);
-    }
-  }
-}
-
-// Acties verschijnen bij hover of toetsenbordfocus
-.card__actions {
-  position: absolute;
-  right: 0.4rem;
-  top: 0.4rem;
-  display: flex;
-  gap: 0.15rem;
-  padding: 0.15rem;
-  border-radius: 999px;
-  background: rgba(7, 8, 12, 0.7);
-  backdrop-filter: blur(10px);
-  opacity: 0;
-  transform: translateY(-4px);
-  transition:
-    opacity 0.25s,
-    transform 0.3s var(--ease);
-
-  a,
-  button {
-    --mat-icon-button-state-layer-size: 34px;
-    width: 34px;
-    height: 34px;
-    padding: 5px;
-    color: var(--paper);
-  }
-
-  mat-icon {
-    font-size: 19px;
-    width: 19px;
-    height: 19px;
-  }
-
-  .danger:hover {
-    color: #f08a7a;
-  }
-}
-
-.card:hover .card__actions,
-.card:focus-within .card__actions {
-  opacity: 1;
-  transform: none;
-}
-
-@media (hover: none) {
-  .card__actions {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (max-width: 620px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .filters {
-    border-radius: var(--radius);
-    top: 4.25rem;
-  }
-
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem 1rem;
-  }
+  text-align: right !important;
 }

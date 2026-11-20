@@ -1,9 +1,8 @@
 <main class="page to-read">
   <header class="header">
-    <p class="eyebrow rise">Leeslijst</p>
-    <h1 class="rise">Wat nog <em>wacht.</em></h1>
+    <h1>Wat nog <em>wacht.</em></h1>
     @if (!items.isLoading() && !items.error()) {
-      <p class="lede rise">
+      <p class="lede">
         <span class="num">{{ filtered().length }}</span>
         {{ filtered().length === 1 ? 'titel staat' : 'titels staan' }} klaar om aan te beginnen.
       </p>
@@ -11,17 +10,23 @@
   </header>
 
   <div class="filters">
-    <select aria-label="Soort" (change)="setType($event)">
+    <div class="field">
+    <label for="type">Soort</label>
+    <select id="type" (change)="setType($event)">
       <option value="">Boeken en documentaires</option>
       <option value="BOOK">Alleen boeken</option>
       <option value="DOCUMENTARY">Alleen documentaires</option>
     </select>
-    <select aria-label="Categorie" (change)="setCategory($event)">
+    </div>
+    <div class="field">
+    <label for="category">Categorie</label>
+    <select id="category" (change)="setCategory($event)">
       <option value="">Alle categorieën</option>
       @for (c of categories(); track c) {
         <option [value]="c">{{ c }}</option>
       }
     </select>
+    </div>
   </div>
 
   @if (items.isLoading()) {
@@ -36,12 +41,12 @@
     <div class="empty">
       <h2>Niets openstaand</h2>
       <p>Alles gelezen en bekeken. Tijd voor iets nieuws?</p>
-      <a class="pill pill--lamp" routerLink="/library/books/new">+ Boek toevoegen</a>
+      <a class="btn btn--primary" routerLink="/library/books/new">Boek toevoegen</a>
     </div>
   } @else {
     <ol class="list">
       @for (item of filtered(); track item.id; let i = $index) {
-        <li class="row reveal" [style.--c]="color(item)">
+        <li class="row" [style.--c]="color(item)">
           <a
             class="row__link"
             [routerLink]="editLink(item.type, item.id)"
@@ -58,7 +63,6 @@
               <span>{{ item.creator_name }}</span>
             </span>
             <span class="chip">{{ label(item) }}</span>
-            <span class="row__arrow" aria-hidden="true">→</span>
           </a>
         </li>
       }

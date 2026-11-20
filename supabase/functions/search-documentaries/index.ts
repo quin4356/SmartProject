@@ -1,3 +1,5 @@
+import { createClient } from 'npm:@supabase/supabase-js@2';
+
 const TMDB_URL = 'https://api.themoviedb.org/3/search/movie';
 const TMDB_MOVIE_URL = 'https://api.themoviedb.org/3/movie';
 const TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/w185';
@@ -18,9 +20,18 @@ function json(body: unknown, status = 200): Response {
   });
 }
 
-async function findDirector(id: number, apiKey: string): Promise<string> {
-  const params = new URLSearchParams({ api_key: apiKey });
-  const response = await fetch(`${TMDB_MOVIE_URL}/${id}/credits?${params}`);
+// Voorkeur: v4-leestoken in een header (komt niet in URL's of logs). Anders de v3-key.
+function tmdbRequest(url: string, params: URLSearchParams): Promise<Response> {
+  const token = Deno.env.get('TMDB_READ_ACCESS_TOKEN');
+  if (token) {
+    return fetch(`${url}?${params}`, { headers: { Authorization: `Bearer ${token}` } });
+  }
+  params.set('api_key', Deno.env.get('TMDB_API_KEY')!);
+  return fetch(`${url}?${params}`);
+}
+
+async function findDirector(id: number): Promise<string> {
+  const response = await tmdbRequest(`${TMDB_MOVIE_URL}/${id}/credits`, new URLSearchParams());
   if (!response.ok) {
     return '';
   }
@@ -36,19 +47,26 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: CORS_HEADERS });
   }
 
+  // Alleen aangemelde gebruikers mogen zoeken (beschermt het API-quotum).
+  const token = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
+  const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!);
+  const { data: auth, error: authError } = await userClient.auth.getUser(token);
+  if (authError || !auth.user) {
+    return json({ error: 'Unauthorized' }, 401);
+  }
+
   const { query } = await req.json().catch(() => ({ query: '' }));
   const q = typeof query === 'string' ? query.trim() : '';
   if (q.length < MIN_QUERY_LENGTH || q.length > MAX_QUERY_LENGTH) {
     return json({ error: 'Invalid query' }, 400);
   }
 
-  const apiKey = Deno.env.get('TMDB_API_KEY');
-  if (!apiKey) {
+  if (!Deno.env.get('TMDB_READ_ACCESS_TOKEN') && !Deno.env.get('TMDB_API_KEY')) {
     return json({ error: 'TMDb is not configured' }, 500);
   }
 
-  const params = new URLSearchParams({ api_key: apiKey, query: q, include_adult: 'false' });
-  const response = await fetch(`${TMDB_URL}?${params}`);
+  const params = new URLSearchParams({ query: q, include_adult: 'false' });
+  const response = await tmdbRequest(TMDB_URL, params);
   if (!response.ok) {
     return json({ error: 'TMDb request failed' }, 502);
   }
@@ -61,7 +79,7 @@ Deno.serve(async (req) => {
     matches.map(async (item: any) => ({
       id: String(item.id),
       title: item.title ?? '',
-      creator: await findDirector(item.id, apiKey),
+      creator: await findDirector(item.id),
       description: item.overview ?? '',
       coverUrl: item.poster_path ? `${TMDB_IMAGE_URL}${item.poster_path}` : '',
     })),
