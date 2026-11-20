@@ -1,44 +1,55 @@
 import { LibraryItem, topCategory } from './models';
 
-// Gedempte middentonen (HSL, L ~45%): leesbaar met witte tekst op het donkere thema.
-const HUES: Record<string, number> = {
-  'Political Science': 215, // blauw
-  'Psychology': 270, // paars
-  'History': 30, // bruin/oranje
-  'Business & Economics': 145, // groen
-  'Science': 175, // teal
-  'Philosophy': 245, // indigo
-  'Social Science': 335, // roze
-  'Self-Help': 15, // rood-oranje
-  'Biography & Autobiography': 50, // geel/goud
-  'Computers': 195, // cyaan
-  'Health & Fitness': 100, // lime
-  'Religion': 290, // magenta
+// Bookcloth: vijf bandkleuren; alles wat niet past krijgt --cat-overig.
+export interface CategoryGroup {
+  name: string;
+  color: string;
+  /** Tekstkleur op de band (psychologie is licht, dus donkere tekst). */
+  ink: string;
+}
+
+const LIGHT = 'var(--on-dark)';
+
+export const CATEGORY_GROUPS: CategoryGroup[] = [
+  { name: 'Literatuur', color: 'var(--cat-literatuur)', ink: LIGHT },
+  { name: 'Informatica', color: 'var(--cat-informatica)', ink: LIGHT },
+  { name: 'Wetenschap', color: 'var(--cat-wetenschap)', ink: LIGHT },
+  { name: 'Psychologie', color: 'var(--cat-psychologie)', ink: 'var(--cat-psychologie-text)' },
+  { name: 'Geschiedenis', color: 'var(--cat-geschiedenis)', ink: LIGHT },
+  { name: 'Overig', color: 'var(--cat-overig)', ink: LIGHT },
+];
+
+// Google Books-categorieën (hoogste niveau) per groep
+const GROUP_OF: Record<string, string> = {
+  'Fiction': 'Literatuur',
+  'Literary Criticism': 'Literatuur',
+  'Literary Collections': 'Literatuur',
+  'Poetry': 'Literatuur',
+  'Drama': 'Literatuur',
+  'Juvenile Fiction': 'Literatuur',
+  'Young Adult Fiction': 'Literatuur',
+  'Comics & Graphic Novels': 'Literatuur',
+  'Computers': 'Informatica',
+  'Technology & Engineering': 'Informatica',
+  'Science': 'Wetenschap',
+  'Mathematics': 'Wetenschap',
+  'Nature': 'Wetenschap',
+  'Medical': 'Wetenschap',
+  'Psychology': 'Psychologie',
+  'Self-Help': 'Psychologie',
+  'History': 'Geschiedenis',
+  'Biography & Autobiography': 'Geschiedenis',
 };
 
-const NEUTRAL = 'hsl(220 8% 38%)';
-const UNKNOWN = 'hsl(0 0% 30%)';
+export function categoryGroup(item: Pick<LibraryItem, 'type' | 'category'>): CategoryGroup {
+  const name = item.type === 'BOOK' ? GROUP_OF[topCategory(item.category)] : undefined;
+  return CATEGORY_GROUPS.find((g) => g.name === name) ?? CATEGORY_GROUPS[CATEGORY_GROUPS.length - 1];
+}
 
 export function categoryColor(item: Pick<LibraryItem, 'type' | 'category'>): string {
-  if (item.type === 'DOCUMENTARY') {
-    return NEUTRAL;
-  }
-  const name = topCategory(item.category);
-  if (name === 'Onbekend') {
-    return UNKNOWN;
-  }
-  const hue = HUES[name] ?? hashHue(name);
-  return `hsl(${hue} 45% 42%)`;
+  return categoryGroup(item).color;
 }
 
 export function categoryLabel(item: Pick<LibraryItem, 'type' | 'category'>): string {
   return item.type === 'DOCUMENTARY' ? 'Documentaire' : topCategory(item.category);
-}
-
-function hashHue(name: string): number {
-  let h = 0;
-  for (const c of name) {
-    h = (h * 31 + c.charCodeAt(0)) % 360;
-  }
-  return h;
 }

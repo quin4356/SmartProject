@@ -1,6 +1,7 @@
 import { Component, computed, inject, resource, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { LibraryItems } from '../../core/library-items';
 import { download, toCsv } from '../../core/export';
 import {
@@ -13,10 +14,21 @@ import {
   readYears,
 } from '../../core/stats';
 import { Auth } from '../../core/auth';
-import { categoryColor } from '../../core/category-colors';
-import { LibraryItem, itemRoute } from '../../core/models';
+import { CATEGORY_GROUPS, categoryColor, categoryGroup } from '../../core/category-colors';
+import { LibraryItem, datesForStatus, itemRoute } from '../../core/models';
+import { Shelf } from '../../shared/shelf';
 
 const GOAL_KEY = 'yearGoal';
+const PAGE_KEY = 'currentPage:';
+
+/** Huidige pagina per boek, lokaal bewaard (zoals het jaardoel). */
+function storedPage(id: string): number {
+  try {
+    return Number(localStorage.getItem(PAGE_KEY + id)) || 0;
+  } catch {
+    return 0;
+  }
+}
 
 function storedGoal(): number {
   try {
@@ -41,13 +53,14 @@ const MONTHS = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', '
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DecimalPipe, RouterLink],
+  imports: [DecimalPipe, RouterLink, Shelf],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   private readonly libraryItems = inject(LibraryItems);
   private readonly auth = inject(Auth);
+  private readonly snackBar = inject(MatSnackBar);
 
   protected readonly months = MONTHS;
   protected readonly goal = signal(storedGoal());
@@ -86,14 +99,41 @@ export class Dashboard {
     month: 'long',
   });
 
-  /** Wat nu gelezen of bekeken wordt, en anders de laatst toegevoegde items. */
-  protected readonly shelf = computed(() => {
-    const busy = this.data().filter((i) => i.status === 'IN_PROGRESS');
-    return busy.length ? busy : this.data().slice(0, 8);
-  });
-  protected readonly shelfIsBusy = computed(() =>
-    this.data().some((i) => i.status === 'IN_PROGRESS'),
+  protected readonly docsThisYear = computed(
+    () =>
+      this.data().filter(
+        (i) =>
+          i.type === 'DOCUMENTARY' &&
+          i.status === 'DONE' &&
+          i.end_date?.startsWith(String(this.currentYear)),
+      ).length,
   );
+
+  /** Plank van dit jaar: dit jaar uitgelezen of bekeken, plus wat nu bezig is. */
+  protected readonly yearShelf = computed(() =>
+    this.data()
+      .filter(
+        (i) =>
+          i.status === 'IN_PROGRESS' ||
+          (i.status === 'DONE' && i.end_date?.startsWith(String(this.currentYear))),
+      )
+      .sort((a, b) => (a.end_date ?? '9999').localeCompare(b.end_date ?? '9999')),
+  );
+  protected readonly reading = computed(() =>
+    this.data().filter((i) => i.status === 'IN_PROGRESS'),
+  );
+  protected readonly toRead = computed(() =>
+    this.data()
+      .filter((i) => i.status === 'TO_DO')
+      .slice(0, 10),
+  );
+  protected readonly groups = CATEGORY_GROUPS;
+  protected readonly group = categoryGroup;
+
+  /** Pagina's die in deze sessie zijn bijgewerkt (overschrijft de lokale opslag). */
+  private readonly pages = signal<Record<string, number>>({});
+  protected readonly editingPage = signal<string | null>(null);
+  protected readonly busy = signal<string | null>(null);
   protected readonly totalRead = computed(
     () => this.data().filter((i) => i.status === 'DONE').length,
   );
@@ -117,6 +157,43 @@ export class Dashboard {
       } catch {
         // opslag niet beschikbaar: doel geldt alleen voor deze sessie
       }
+    }
+  }
+
+  protected currentPage(item: LibraryItem): number {
+    return this.pages()[item.id] ?? storedPage(item.id);
+  }
+
+  protected progress(item: LibraryItem): number {
+    return item.page_count ? Math.min(100, (this.currentPage(item) / item.page_count) * 100) : 0;
+  }
+
+  protected savePage(item: LibraryItem, value: string): void {
+    const page = Math.max(0, Math.min(item.page_count ?? Infinity, Math.floor(Number(value))));
+    if (Number.isNaN(page)) {
+      return;
+    }
+    this.pages.set({ ...this.pages(), [item.id]: page });
+    try {
+      localStorage.setItem(PAGE_KEY + item.id, String(page));
+    } catch {
+      // opslag niet beschikbaar: pagina geldt alleen voor deze sessie
+    }
+    this.editingPage.set(null);
+  }
+
+  protected async markRead(item: LibraryItem): Promise<void> {
+    this.busy.set(item.id);
+    try {
+      await this.libraryItems.update(item.id, {
+        status: 'DONE',
+        ...datesForStatus(item.status, 'DONE', item.start_date),
+      });
+      this.items.reload();
+    } catch {
+      this.snackBar.open('Bijwerken mislukt. Probeer het opnieuw.', 'Sluiten', { duration: 5000 });
+    } finally {
+      this.busy.set(null);
     }
   }
 

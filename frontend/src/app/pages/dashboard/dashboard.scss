@@ -1,248 +1,176 @@
 .intro {
-  margin: 1rem 0 3rem;
+  margin: 1rem 0 2.5rem;
 
   h1 {
-    margin-bottom: 1rem;
-
-    em {
-      color: var(--lamp);
-    }
+    font-size: clamp(2.5rem, 7vw, 56px);
+    margin-bottom: 0.75rem;
   }
 
   .lede {
-  }
-
-  strong {
-    color: var(--paper);
-    font-weight: 500;
+    margin: 0 0 1.5rem;
   }
 }
 
-.intro__actions {
+.actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 1.75rem;
 }
 
-.welcome {
-  margin-bottom: 2rem;
+.block {
+  margin-bottom: 3rem;
 }
 
-// Horizontale plank met omslagen
-.strip {
-  margin-bottom: 2.5rem;
-}
-
-.strip__head {
+// Legenda onder de plank
+.legend {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
 
-.strip__hint {
-  font-size: 0.75rem;
-  color: var(--paper-faint);
-}
-
-.strip__track {
-  display: flex;
-  gap: 1.25rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 0.75rem 0.25rem 1.5rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line-strong) transparent;
-}
-
-.cover {
-  --c: var(--ink-3);
-  position: relative;
-  flex: 0 0 150px;
-  aspect-ratio: 2 / 3;
-  scroll-snap-align: start;
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--c);
-  box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.9);
-  transition:
-    transform 0.5s var(--ease),
-    box-shadow 0.5s;
-  text-decoration: none;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s var(--ease);
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
   }
+}
 
-  &__blank {
-    display: flex;
-    align-items: flex-end;
-    height: 100%;
-    padding: 0.9rem;
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: var(--ink-soft);
+
+  &--open {
+    background: transparent;
+    border: 2px solid var(--ink-soft);
     box-sizing: border-box;
-    font: 400 1.05rem/1.15 var(--font-display);
-    color: var(--paper);
-    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.45));
   }
 
-  // titel schuift omhoog bij hover of focus
-  &__meta {
-    position: absolute;
-    inset: auto 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    padding: 2.5rem 0.75rem 0.75rem;
-    background: linear-gradient(180deg, transparent, rgba(7, 8, 12, 0.95));
-    color: var(--paper);
-    transform: translateY(100%);
-    transition: transform 0.45s var(--ease);
-
-    strong {
-      font: 400 0.95rem/1.15 var(--font-display);
-    }
-
-    small {
-      font-size: 0.75rem;
-      color: var(--paper-dim);
-    }
-  }
-
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-6px) rotate(-1deg);
-    box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 1);
-
-    img {
-      transform: scale(1.06);
-    }
-
-    .cover__meta {
-      transform: none;
-    }
+  &--flat {
+    width: 22px;
+    height: 8px;
   }
 }
 
-@media (hover: none) {
-  .cover__meta {
-    transform: none;
-  }
-}
-
-// Secties onder elkaar, gescheiden door een lijn
-.sections {
+// Twee kolommen: nu aan het lezen / te lezen
+.columns {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2.5rem;
-}
-
-.section {
-  min-width: 0;
   padding-top: 1.5rem;
   border-top: 1px solid var(--rule);
 
-  h2 {
-    font-size: 1.5rem;
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
   }
 }
 
-.welcome__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+.reading {
+  padding: 1rem 0 1.25rem;
+  border-bottom: 1px solid var(--rule);
+
+  h3 {
+    margin: 0;
+    font-size: 1.35rem;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  p {
+    margin: 0.25rem 0 0.75rem;
+  }
 }
 
-.section__head {
+.progress {
+  height: 8px;
+  background: var(--rule);
+
+  &__fill {
+    height: 100%;
+    background: var(--primary);
+  }
+}
+
+.page-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+
+  input {
+    width: 7rem;
+  }
+}
+
+.todo {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    padding: 0.6rem 0 0.6rem 0.9rem;
+    border-left: 6px solid var(--c, var(--ink-soft));
+    border-bottom: 1px solid var(--rule);
+  }
+
+  a {
+    font-weight: 500;
+    text-decoration: none;
+  }
+}
+
+// Overzicht
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem 2.5rem;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.2rem;
+}
+
+.stats h3 {
+  margin-top: 0;
+}
+
+.goal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input {
+    width: 5rem;
+  }
+}
+
+.figure {
+  font: 500 2.5rem/1 var(--font-display);
+}
+
+.section-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
 }
 
-// Jaardoel met ring
-.goal {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-}
-
-.goal__count {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  margin: 0 0 0.5rem;
-
-  > span {
-    font: 300 4.5rem/1 var(--font-display);
-    letter-spacing: -0.04em;
-  }
-
-  small {
-    color: var(--paper-dim);
-  }
-
-  input {
-    width: 4.5rem;
-    font-size: 1.1rem;
-  }
-}
-
-.ring {
-  width: min(150px, 38%);
-  flex-shrink: 0;
-  transform: rotate(-90deg);
-
-  circle {
-    fill: none;
-    stroke-width: 8;
-  }
-
-  &__track {
-    stroke: var(--line);
-  }
-
-  &__fill {
-    stroke: var(--lamp);
-    stroke-linecap: round;
-    filter: drop-shadow(0 0 6px rgba(242, 180, 90, 0.6));
-    transition: stroke-dasharray 1.2s var(--ease);
-  }
-
-  text {
-    transform: rotate(90deg);
-    transform-origin: 60px 60px;
-    fill: var(--paper);
-    font-size: 20px;
-  }
-}
-
-
-// Losse cijfers
-.stat {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat__value {
-  margin: auto 0 0.25rem;
-  font: 300 3.75rem/1 var(--font-display);
-  letter-spacing: -0.04em;
-}
-
-.stat .muted {
-  margin: 0;
-}
-
-// Verloop per maand
 .months {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 0.4rem;
-  height: 170px;
-  margin-top: 1rem;
+  height: 160px;
 }
 
 .month {
@@ -250,62 +178,40 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.35rem;
+  gap: 0.3rem;
   min-width: 0;
-
-  &__n {
-    font-size: 0.72rem;
-    color: var(--paper-dim);
-  }
+  font-size: 0.8rem;
 
   &__label {
-    font-size: 0.68rem;
-    color: var(--paper-faint);
+    color: var(--ink-soft);
   }
 }
 
 .column {
   width: 100%;
-  min-height: 3px;
-  border-radius: 6px 6px 2px 2px;
-  background: linear-gradient(180deg, var(--lamp), rgba(242, 180, 90, 0.15));
-  transition: filter 0.2s;
-
-  .month:hover & {
-    filter: brightness(1.25);
-  }
-
-  .is-empty & {
-    background: var(--line);
-  }
+  min-height: 2px;
+  background: var(--primary);
 }
 
-// Categorieën
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+
+  th,
+  td {
+    padding: 0.5rem 0.25rem;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+  }
 
   th {
-    font: 500 0.7rem var(--font-mono);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--paper-faint);
-    text-align: left;
-    padding: 0 0.5rem 0.6rem;
+    font-weight: 500;
+    color: var(--ink-soft);
   }
 
-  td {
-    padding: 0.55rem 0.5rem;
-    border-top: 1px solid var(--line);
-  }
-
-  tr {
-    transition: background 0.2s;
-  }
-
-  tbody tr:hover {
-    background: rgba(239, 231, 214, 0.03);
+  .swatch {
+    margin-right: 0.5rem;
+    vertical-align: -1px;
   }
 }
 
@@ -313,93 +219,21 @@ table {
   text-align: right !important;
 }
 
-.dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 0.6rem;
-  border-radius: 50%;
-  background: var(--c);
-}
-
-.bar-cell {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.bar-track {
-  flex: 1;
-  max-width: 140px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--line);
-  overflow: hidden;
-}
-
-.bar-fill {
-  height: 100%;
-  border-radius: inherit;
-  background: var(--c);
-}
-
-// Auteurs
 .authors {
-  list-style: none;
-  margin: 0;
+  margin: 0 0 1rem;
   padding: 0;
-  counter-reset: a;
+  list-style: none;
 
   li {
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
-    padding: 0.45rem 0;
-    border-top: 1px solid var(--line);
-    font-size: 0.9rem;
-    counter-increment: a;
-
-    &::before {
-      content: counter(a, decimal-leading-zero);
-      font: 0.7rem var(--font-mono);
-      color: var(--paper-faint);
-      margin-right: 0.75rem;
-      padding-top: 0.2rem;
-    }
-
-    span:first-child {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    span:last-child {
-      color: var(--lamp);
-    }
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--rule);
   }
-}
-
-.export__buttons {
-  display: flex;
-  gap: 0.6rem;
-  margin-top: 1rem;
 }
 
 @media (max-width: 620px) {
-  .stat__value {
-    font-size: 2.75rem;
-  }
-
-  .goal__count > span {
-    font-size: 3.5rem;
-  }
-
-  .cover {
-    flex-basis: 120px;
-  }
-
   .month__label {
-    font-size: 0.55rem;
+    font-size: 0.6rem;
   }
 }
