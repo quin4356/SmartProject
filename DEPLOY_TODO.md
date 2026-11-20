@@ -5,12 +5,7 @@ Opgesteld op 2026-11-20. 🔧 = in de code, 👤 = zelf doen in een dashboard of
 ## 1. Blokkerend: zonder dit niet live
 
 ### Code en branch
-- [ ] 🔧 **Redesign afmaken of apart houden.** De Bookcloth-redesign staat halverwege: stap 3–6 ontbreken.
-  - De categoriekleuren zijn nog de oude.
-  - Er staan nog tijdelijke aliassen (`--paper`, `--lamp`) in.
-  - De loginpagina heeft nog de oude animaties en kleuren.
-
-  Afmaken, of `main` zonder redesign live zetten.
+- [x] 🔧 **Bookcloth-redesign afgerond** (stap 1–6, branch `bookcloth-ontwerp`). Nog te controleren: de pagina's achter de login in de browser.
 - [ ] 🔧 **PR naar `main`.** Daarna wachten tot de CI groen is.
 - [ ] 🔧 **Niet-geteste checks alsnog draaien:**
   - `nginx -t` (alleen bij hosten via Docker);
@@ -57,7 +52,7 @@ Opgesteld op 2026-11-20. 🔧 = in de code, 👤 = zelf doen in een dashboard of
   - het account verwijderen.
 
 ## 2. Belangrijk: kort na de lancering
-- [ ] 🔧 **Jaardoel naar Supabase verplaatsen.** Nu staat het per browser in `localStorage`. Hiervoor is een migratie nodig.
+- [ ] 🔧 **Jaardoel en huidige pagina naar Supabase verplaatsen.** Beide staan nu per browser in `localStorage` (`yearGoal`, `currentPage:<id>`). Hiervoor is een migratie nodig.
 - [ ] 🔧 **Rate limit op de zoekfuncties**, per gebruiker en per minuut.
 - [ ] 👤 **Kortere geldigheid voor het access-token**, bijvoorbeeld 15–30 minuten. Nu is het 1 uur.
 - [ ] 👤 **Back-ups regelen:** het Pro-plan, of zelf periodiek een `pg_dump`.

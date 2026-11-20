@@ -10,17 +10,23 @@
   </header>
 
   <div class="filters">
-    <select aria-label="Soort" (change)="setType($event)">
+    <div class="field">
+    <label for="type">Soort</label>
+    <select id="type" (change)="setType($event)">
       <option value="">Boeken en documentaires</option>
       <option value="BOOK">Alleen boeken</option>
       <option value="DOCUMENTARY">Alleen documentaires</option>
     </select>
-    <select aria-label="Categorie" (change)="setCategory($event)">
+    </div>
+    <div class="field">
+    <label for="category">Categorie</label>
+    <select id="category" (change)="setCategory($event)">
       <option value="">Alle categorieën</option>
       @for (c of categories(); track c) {
         <option [value]="c">{{ c }}</option>
       }
     </select>
+    </div>
   </div>
 
   @if (items.isLoading()) {
@@ -57,7 +63,6 @@
               <span>{{ item.creator_name }}</span>
             </span>
             <span class="chip">{{ label(item) }}</span>
-            <span class="row__arrow" aria-hidden="true">→</span>
           </a>
         </li>
       }

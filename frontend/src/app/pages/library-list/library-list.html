@@ -8,106 +8,128 @@
         </p>
       }
     </div>
-    <a class="btn btn--primary" [routerLink]="addRoute()">Toevoegen</a>
+    <a class="btn btn--primary" [routerLink]="addRoute()">
+      {{ type() === 'BOOK' ? 'Boek toevoegen' : 'Documentaire toevoegen' }}
+    </a>
   </header>
 
   <div class="filters">
-    <label class="search">
-      <mat-icon aria-hidden="true">search</mat-icon>
+    <div class="field field--grow">
+      <label for="search">Zoeken</label>
       <input
+        id="search"
         type="search"
-        placeholder="Zoek op titel, maker of categorie"
-        aria-label="Zoeken"
+        placeholder="Titel, maker of categorie"
         (input)="setQuery($event)"
       />
-    </label>
-    <select aria-label="Status" (change)="setStatus($event)">
-      <option value="">Alle statussen</option>
-      @for (o of statusOptions(); track o.value) {
-        <option [value]="o.value">{{ o.label }}</option>
-      }
-    </select>
-    <select aria-label="Sorteren" (change)="setSort($event)">
-      <option value="newest">Nieuwste eerst</option>
-      <option value="title">Titel A–Z</option>
-      <option value="rating">Beoordeling</option>
-    </select>
+    </div>
+    <div class="field">
+      <label for="status">Status</label>
+      <select id="status" (change)="setStatus($event)">
+        <option value="">Alle statussen</option>
+        @for (o of statusOptions(); track o.value) {
+          <option [value]="o.value">{{ o.label }}</option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="sort">Sorteren</label>
+      <select id="sort" (change)="setSort($event)">
+        <option value="newest">Nieuwste eerst</option>
+        <option value="title">Titel A–Z</option>
+        <option value="rating">Beoordeling</option>
+      </select>
+    </div>
+    <div class="toggle" role="group" aria-label="Weergave">
+      <button
+        type="button"
+        class="btn"
+        [attr.aria-pressed]="view() === 'shelf'"
+        (click)="view.set('shelf')"
+      >
+        Plank
+      </button>
+      <button
+        type="button"
+        class="btn"
+        [attr.aria-pressed]="view() === 'list'"
+        (click)="view.set('list')"
+      >
+        Lijst
+      </button>
+    </div>
   </div>
 
   @if (items.isLoading()) {
-    <div class="grid" aria-busy="true" aria-label="Laden">
-      @for (n of [1, 2, 3, 4, 5, 6]; track n) {
-        <div class="skeleton" style="aspect-ratio: 2 / 3.6"></div>
-      }
-    </div>
+    <div class="skeleton" style="height: 240px" aria-busy="true" aria-label="Laden"></div>
   } @else if (items.error()) {
     <p class="empty">Laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.</p>
   } @else if (items.value()?.length === 0) {
     <div class="empty">
       <h2>Nog niets op deze plank</h2>
       <p>Voeg je eerste titel toe, de rest zoeken we voor je op.</p>
-      <a class="btn btn--primary" [routerLink]="addRoute()">Toevoegen</a>
+      <a class="btn btn--primary" [routerLink]="addRoute()">
+        {{ type() === 'BOOK' ? 'Boek toevoegen' : 'Documentaire toevoegen' }}
+      </a>
     </div>
   } @else if (visible().length === 0) {
     <p class="empty">Geen resultaten voor deze filters.</p>
+  } @else if (view() === 'shelf') {
+    @for (s of shelves(); track s.name) {
+      <section class="shelf-block" [attr.aria-labelledby]="'shelf-' + $index">
+        <h2 [id]="'shelf-' + $index">
+          {{ s.name }} <span class="count num">{{ s.items.length }}</span>
+        </h2>
+        <app-shelf [items]="s.items" [label]="s.name" />
+      </section>
+    }
   } @else {
-    <div class="grid">
-      @for (item of visible(); track item.id) {
-        <article class="card" [style.--c]="color(item)" [style.--d]="$index">
-          <a
-            class="card__cover"
-            [routerLink]="[editBase(), item.id]"
-            [attr.aria-label]="item.title"
-          >
-            @if (item.cover_url) {
-              <img [src]="item.cover_url" alt="" loading="lazy" />
-            } @else {
-              <span class="card__blank">{{ item.title }}</span>
-            }
-            <span class="badge">{{ statusLabel(item.type, item.status) }}</span>
-          </a>
-
-          <div class="card__body">
-            <h2 class="card__title">
-              <a [routerLink]="[editBase(), item.id]">{{ item.title }}</a>
-            </h2>
-            <p class="card__creator">{{ item.creator_name }}</p>
-            <p class="card__meta">
-              @if (item.type === 'BOOK') {
-                <span class="chip" [title]="item.category ?? ''">{{
-                  topCategory(item.category)
-                }}</span>
-              }
-              @if (item.rating) {
-                <span class="stars" [attr.aria-label]="item.rating + ' van 5'">
-                  @for (s of [1, 2, 3, 4, 5]; track s) {
-                    <i [class.on]="s <= item.rating!" aria-hidden="true"></i>
-                  }
-                </span>
-              }
-            </p>
-          </div>
-
-          <div class="card__actions">
-            <a
-              mat-icon-button
-              [routerLink]="[editBase(), item.id, 'edit']"
-              [attr.aria-label]="'Bewerk ' + item.title"
-            >
-              <mat-icon>edit</mat-icon>
-            </a>
-            <button
-              mat-icon-button
-              class="danger"
-              (click)="deleteItem(item.id)"
-              [disabled]="deleting()[item.id]"
-              [attr.aria-label]="'Verwijder ' + item.title"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </article>
-      }
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">
+          {{ title() }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Titel</th>
+            <th scope="col">Maker</th>
+            <th scope="col">Categorie</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="num-col">Pagina's</th>
+            <th scope="col"><span class="sr-only">Acties</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of visible(); track item.id) {
+            <tr>
+              <td>
+                <a [routerLink]="[editBase(), item.id]">{{ item.title }}</a>
+              </td>
+              <td>{{ item.creator_name }}</td>
+              <td>{{ label(item) }}</td>
+              <td>{{ statusLabel(item.type, item.status) }}</td>
+              <td class="num num-col">{{ item.page_count ?? '–' }}</td>
+              <td class="row-actions">
+                <a
+                  mat-icon-button
+                  [routerLink]="[editBase(), item.id, 'edit']"
+                  [attr.aria-label]="'Bewerk ' + item.title"
+                >
+                  <mat-icon>edit</mat-icon>
+                </a>
+                <button
+                  mat-icon-button
+                  (click)="deleteItem(item.id)"
+                  [disabled]="deleting()[item.id]"
+                  [attr.aria-label]="'Verwijder ' + item.title"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
   }
 </main>

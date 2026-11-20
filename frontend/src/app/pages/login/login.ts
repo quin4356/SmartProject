@@ -16,18 +16,15 @@ export class Login {
 
   protected readonly headline = ['Alles', 'wat', 'je', 'leest,', 'blijft', 'bij', 'je.'];
 
-  /** Decoratieve boekruggen in de hero: kleur (hue), hoogte en breedte. */
+  /** Decoratieve boekruggen in de hero: bandkleur, hoogte en breedte (px). */
   protected readonly spines = [
-    { title: 'Sapiens', hue: 30, h: 86, w: 46 },
-    { title: 'Thinking, Fast and Slow', hue: 270, h: 94, w: 54 },
-    { title: 'Atomic Habits', hue: 15, h: 78, w: 40 },
-    { title: 'Cosmos', hue: 195, h: 90, w: 50 },
-    { title: 'Meditaties', hue: 245, h: 82, w: 38 },
-    { title: 'De Republiek', hue: 215, h: 96, w: 58 },
-    { title: 'Factfulness', hue: 145, h: 84, w: 44 },
+    { title: 'Sapiens', color: 'var(--cat-geschiedenis)', ink: 'var(--on-dark)', h: 192, w: 46 },
+    { title: 'Thinking, Fast and Slow', color: 'var(--cat-psychologie)', ink: 'var(--ink)', h: 206, w: 54 },
+    { title: 'Middlemarch', color: 'var(--cat-literatuur)', ink: 'var(--on-dark)', h: 220, w: 62 },
+    { title: 'Cosmos', color: 'var(--cat-wetenschap)', ink: 'var(--on-dark)', h: 178, w: 42 },
+    { title: 'Clean Code', color: 'var(--cat-informatica)', ink: 'var(--on-dark)', h: 164, w: 40 },
+    { title: 'De Republiek', color: 'var(--cat-overig)', ink: 'var(--on-dark)', h: 198, w: 50 },
   ];
-
-  protected readonly months = [2, 3, 1, 4, 3, 5, 4, 6, 5, 7, 6, 8];
 
   async signInWithGoogle(): Promise<void> {
     this.errorMessage.set(null);

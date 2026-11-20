@@ -42,18 +42,6 @@ html {
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --font-display: 'Alegreya', Georgia, serif;
   --font-body: 'Alegreya Sans', system-ui, sans-serif;
-  --font-mono: var(--font-body);
-
-  // Tijdelijke aliassen voor oude namen in de pages (verdwijnen in stap 2-6)
-  --paper: var(--ink);
-  --paper-dim: var(--ink-soft);
-  --paper-faint: var(--ink-soft);
-  --lamp: var(--primary);
-  --lamp-soft: transparent;
-  --line: var(--rule);
-  --line-strong: var(--rule);
-  --ink-2: var(--field);
-  --ink-3: var(--field);
 
   // Material op de tokens zetten
   --mat-sys-background: var(--board);
@@ -186,7 +174,7 @@ h2 {
 
 .lede {
   font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-  color: var(--paper-dim);
+  color: var(--ink-soft);
   max-width: 46ch;
 }
 
@@ -195,13 +183,13 @@ h2 {
 }
 
 a {
-  color: var(--paper);
-  text-decoration-color: var(--lamp);
+  color: var(--ink);
+  text-decoration-color: var(--primary);
   text-underline-offset: 0.2em;
   transition: color 0.2s;
 
   &:hover {
-    color: var(--lamp);
+    color: var(--primary);
   }
 }
 
@@ -210,7 +198,8 @@ a {
   color: var(--on-dark);
 }
 
-:focus-visible {
+:focus-visible,
+.mat-mdc-button-base:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
@@ -235,14 +224,14 @@ a {
   h2 {
     margin: 2.75rem 0 0.75rem;
     padding-top: 1.25rem;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--rule);
     font-size: 1.6rem;
   }
 
   p,
   li {
     max-width: 64ch;
-    color: var(--paper-dim);
+    color: var(--ink-soft);
     line-height: 1.7;
   }
 }
@@ -260,9 +249,9 @@ input[type='search'],
 input[type='number'],
 select:not([matNativeControl]) {
   font: inherit;
-  color: var(--paper);
-  background: var(--ink-3);
-  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--rule);
   border-radius: 0;
   padding: 0.55rem 1rem;
   min-height: 44px;
@@ -314,7 +303,7 @@ select:not([matNativeControl]) {
 }
 
 .muted {
-  color: var(--paper-dim);
+  color: var(--ink-soft);
 }
 
 .sr-only {
@@ -333,11 +322,11 @@ select:not([matNativeControl]) {
 }
 
 .empty {
-  border: 1px dashed var(--line-strong);
+  border: 1px dashed var(--rule);
   border-radius: var(--radius);
   padding: 2.5rem 1.5rem;
   text-align: center;
-  color: var(--paper-dim);
+  color: var(--ink-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {

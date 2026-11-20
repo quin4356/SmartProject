@@ -48,7 +48,7 @@ import { ConfirmDialog } from './confirm-dialog';
       display: contents;
     }
     .account {
-      --mat-button-text-label-text-color: var(--paper);
+      --mat-button-text-label-text-color: var(--ink);
       padding: 0 0.75rem 0 0.35rem;
       height: 40px;
     }
@@ -72,12 +72,12 @@ import { ConfirmDialog } from './confirm-dialog';
       flex-direction: column;
       gap: 0.15rem;
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--rule);
       margin-bottom: 0.25rem;
     }
     .account__profile span {
       font-size: 0.85em;
-      color: var(--paper-dim);
+      color: var(--ink-soft);
     }
     .account__danger {
       color: var(--primary);

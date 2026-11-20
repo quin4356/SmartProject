@@ -93,7 +93,7 @@
 // Mobiel menu
 .drawer {
   width: min(86vw, 360px);
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--rule);
 }
 
 .drawer__nav {
@@ -120,7 +120,7 @@
 
 .drawer__index {
   font-size: 0.75rem;
-  color: var(--paper-faint);
+  color: var(--ink-soft);
 }
 
 @media (max-width: 860px) {
@@ -144,7 +144,7 @@
 // Footer
 .footer {
   margin-top: 4rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--rule);
 }
 
 .footer__inner {
@@ -156,12 +156,11 @@
 
 .footer__line {
   margin: 0 0 2rem;
-  font: 300 clamp(1.8rem, 4vw, 3rem) / 1.05 var(--font-display);
-  letter-spacing: -0.02em;
-  color: var(--paper);
+  font: 500 clamp(1.6rem, 3.5vw, 2.4rem) / 1.1 var(--font-display);
+  color: var(--ink);
 
   em {
-    color: var(--lamp);
+    color: var(--primary);
   }
 }
 
@@ -170,14 +169,14 @@
   flex-wrap: wrap;
   gap: 0.5rem 1.5rem;
   font-size: 0.85rem;
-  color: var(--paper-dim);
+  color: var(--ink-soft);
 
   a {
-    color: var(--paper-dim);
+    color: var(--ink-soft);
     text-decoration: none;
 
     &:hover {
-      color: var(--lamp);
+      color: var(--primary);
     }
   }
 }
@@ -185,5 +184,5 @@
 .footer__note {
   margin: 1rem 0 0;
   font-size: 0.75rem;
-  color: var(--paper-faint);
+  color: var(--ink-soft);
 }

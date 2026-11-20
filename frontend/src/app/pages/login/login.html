@@ -1,22 +1,16 @@
 <main class="landing">
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero__text">
+      <h1 id="hero-title">{{ headline.join(' ') }}</h1>
 
-      <h1 id="hero-title" class="hero__title" [attr.aria-label]="headline.join(' ')">
-        @for (word of headline; track $index) {
-          <span class="word" aria-hidden="true" [style.--i]="$index">{{ word }}</span>
-        }
-      </h1>
-
-      <p class="lede hero__lede">
+      <p class="lede">
         Houd bij welke boeken je leest en welke documentaires je kijkt. Zoek een titel, de rest vult
         zich vanzelf in.
       </p>
 
       <div class="cta">
-        <button mat-flat-button type="button" class="cta__button" (click)="signInWithGoogle()">
+        <button mat-flat-button type="button" (click)="signInWithGoogle()">
           Aanmelden met Google
-          <span class="cta__arrow" aria-hidden="true">→</span>
         </button>
         @if (errorMessage()) {
           <p class="cta__error" role="alert">{{ errorMessage() }}</p>
@@ -30,91 +24,36 @@
     </div>
 
     <div class="shelf" aria-hidden="true">
-      <div class="shelf__lamp"></div>
-      <div class="shelf__row">
-        @for (s of spines; track s.title) {
-          <div
-            class="spine"
-            [style.--hue]="s.hue"
-            [style.height.%]="s.h"
-            [style.width.px]="s.w"
-            [style.--i]="$index"
-          >
-            <span>{{ s.title }}</span>
-          </div>
-        }
-      </div>
-      <div class="shelf__plank"></div>
-    </div>
-
-    <a class="scroll-hint" href="#hoe" aria-label="Lees hoe het werkt">
-      <span></span>
-    </a>
-  </section>
-
-  <section id="hoe" class="story">
-    <div class="story__intro">
-      <h2 class="story__title">Drie handelingen. <em>Een leesleven lang overzicht.</em></h2>
-    </div>
-
-    <div class="story__steps">
-      <article class="step">
-        <span class="step__num num">01</span>
-        <div>
-          <h3>Zoek</h3>
-          <p>
-            Typ een titel. Google Books en TMDB vullen omslag, auteur en aantal pagina's voor je in.
-          </p>
+      @for (s of spines; track s.title) {
+        <div
+          class="spine"
+          [style.background]="s.color"
+          [style.color]="s.ink"
+          [style.height.px]="s.h"
+          [style.width.px]="s.w"
+        >
+          <span>{{ s.title }}</span>
         </div>
-        <div class="demo demo--search" aria-hidden="true">
-          <div class="demo__field"><span class="demo__typed">Sapiens</span></div>
-          <div class="demo__hit">
-            <i style="--hue: 30"></i>Sapiens <small>Yuval Noah Harari</small>
-          </div>
-          <div class="demo__hit">
-            <i style="--hue: 215"></i>Sapiens (graphic) <small>Harari</small>
-          </div>
-        </div>
-      </article>
-
-      <article class="step">
-        <span class="step__num num">02</span>
-        <div>
-          <h3>Volg</h3>
-          <p>
-            Van te lezen naar aan het lezen naar gelezen. Start- en einddatum worden automatisch
-            gezet.
-          </p>
-        </div>
-        <div class="demo demo--flow" aria-hidden="true">
-          <span>Te lezen</span>
-          <span>Aan het lezen</span>
-          <span>Gelezen</span>
-        </div>
-      </article>
-
-      <article class="step">
-        <span class="step__num num">03</span>
-        <div>
-          <h3>Groei</h3>
-          <p>
-            Een jaardoel, boeken per maand, je leestempo en wat je per onderwerp hebt opgebouwd.
-          </p>
-        </div>
-        <div class="demo demo--chart" aria-hidden="true">
-          @for (m of months; track $index) {
-            <i [style.height.%]="m * 12" [style.--i]="$index"></i>
-          }
-        </div>
-      </article>
+      }
+      <div class="flat">Planet Earth</div>
     </div>
   </section>
 
-  <section class="finale">
-    <h2>Begin met het boek <em>dat nu naast je ligt.</em></h2>
-    <button mat-flat-button type="button" class="cta__button" (click)="signInWithGoogle()">
-      Aanmelden met Google
-      <span class="cta__arrow" aria-hidden="true">→</span>
-    </button>
+  <section class="story" aria-labelledby="story-title">
+    <h2 id="story-title">Hoe het werkt</h2>
+    <ol class="steps">
+      <li>
+        <h3>Zoek</h3>
+        <p>Typ een titel. Google Books en TMDB vullen auteur en aantal pagina's voor je in.</p>
+      </li>
+      <li>
+        <h3>Volg</h3>
+        <p>Van te lezen naar aan het lezen naar gelezen. Start- en einddatum worden vanzelf gezet.</p>
+      </li>
+      <li>
+        <h3>Groei</h3>
+        <p>Elk uitgelezen boek komt op je plank: per jaar, per categorie, in de kleur van zijn band.</p>
+      </li>
+    </ol>
   </section>
 </main>

@@ -42,6 +42,7 @@
                 [style.left.%]="bar.left"
                 [style.width.%]="bar.width"
                 [title]="bar.item.title"
+                [style.--t]="group(bar.item).ink"
               >
                 <span class="fill" [style.background]="color(bar.item)"></span>
                 <span class="label">
